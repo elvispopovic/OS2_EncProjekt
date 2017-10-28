@@ -51,14 +51,14 @@ void ProjektApp::GenerirajAESKljuc(IDijalogAES *dijalog, const std::string& lozi
     glavniStroj->GenerirajAESKljuc(lozinka,velicina,1024, koristiSol, povratniPodaci);
 }
 
-void ProjektApp::EnkriptirajPoruku(const std::vector<unsigned char>& poruka)
+bool ProjektApp::EnkriptirajPoruku(const std::vector<unsigned char>& poruka)
 {
-    glavniStroj->EnkriptirajPoruku(poruka, medjuspremnikPoruke);
+    return glavniStroj->EnkriptirajPoruku(poruka, medjuspremnikPoruke);
 }
 
-void ProjektApp::DekriptirajPoruku(const std::vector<unsigned char>& poruka)
+bool ProjektApp::DekriptirajPoruku(const std::vector<unsigned char>& poruka)
 {
-    glavniStroj->DekriptirajPoruku(poruka, medjuspremnikPoruke);
+    return glavniStroj->DekriptirajPoruku(poruka, medjuspremnikPoruke);
 }
 void ProjektApp::DohvatiMedjuspremnikPoruke(std::vector<unsigned char>& poruka)
 {

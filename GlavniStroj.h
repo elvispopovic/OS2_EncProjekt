@@ -13,8 +13,8 @@ class GlavniStroj : public wxFrame
         virtual bool UpisiAktivneKljuceve(CryptoPP::SecByteBlock& aesKljuc, CryptoPP::SecByteBlock& iv);
         virtual void ZahtijevajAzuriranjeGrafickihPodataka();
         virtual void KreirajSazetak(const std::vector<unsigned char>& poruka);
-        virtual void EnkriptirajPoruku(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& enkriptirano);
-        virtual void DekriptirajPoruku(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& dekriptirano);
+        virtual bool EnkriptirajPoruku(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& enkriptirano);
+        virtual bool DekriptirajPoruku(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& dekriptirano);
 
     protected:
         IProjektApp *projektApp;

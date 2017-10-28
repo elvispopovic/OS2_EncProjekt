@@ -69,12 +69,12 @@ void GlavniStroj::KreirajSazetak(const vector<unsigned char>& poruka)
 
 }
 
-void GlavniStroj::EnkriptirajPoruku(const vector<unsigned char>& poruka, vector<unsigned char>& enkriptirano)
+bool GlavniStroj::EnkriptirajPoruku(const vector<unsigned char>& poruka, vector<unsigned char>& enkriptirano)
 {
     PorukaPodaci upis;
     CBC_Mode<CryptoPP::AES>::Encryption enkriptor;
     if(aesKljuc.size()==0)
-        return;
+        return false;
     enkriptor.SetKeyWithIV(aesKljuc.BytePtr(), aesKljuc.size(), iv.BytePtr(), iv.size());
     enkriptirano.resize(poruka.size()+AES::BLOCKSIZE); //prostor za padding
     ArraySink kriptSink(&enkriptirano[0], enkriptirano.size());
@@ -89,21 +89,23 @@ void GlavniStroj::EnkriptirajPoruku(const vector<unsigned char>& poruka, vector<
         swprintf(ispisw,L"Poruka - enkriptirani sadržaj");
         upis.sadrzaj.assign(ispis);
         upis.oznaka.assign(ispisw);
-
+        projektApp->UpisiPoruku(upis);
+        return true;
     }
     catch(exception& e)
     {
         sprintf(ispis,"---\n");
+        projektApp->UpisiPoruku(upis);
+        return false;
     }
-    projektApp->UpisiPoruku(upis);
 }
 
-void GlavniStroj::DekriptirajPoruku(const vector<unsigned char>& poruka, vector<unsigned char>& dekriptirano)
+bool GlavniStroj::DekriptirajPoruku(const vector<unsigned char>& poruka, vector<unsigned char>& dekriptirano)
 {
     PorukaPodaci upis;
     CBC_Mode<AES>::Decryption dekriptor;
     if(aesKljuc.size()==0)
-        return;
+        return false;
     dekriptor.SetKeyWithIV(aesKljuc.BytePtr(), aesKljuc.size(), iv.BytePtr(), iv.size());
     dekriptirano.resize(poruka.size());
     ArraySink dekriptSink(&dekriptirano[0], dekriptirano.size());
@@ -120,13 +122,17 @@ void GlavniStroj::DekriptirajPoruku(const vector<unsigned char>& poruka, vector<
         swprintf(ispisw,L"Poruka - dekriptirani sadržaj");
         upis.sadrzaj.assign(ispis);
         upis.oznaka.assign(ispisw);
+        projektApp->UpisiPoruku(upis);
+        return true;
     }
     catch(exception& e)
     {
         sprintf(ispis,"---\n");
+        projektApp->UpisiPoruku(upis);
+        return false;
     }
 
-    projektApp->UpisiPoruku(upis);
+
 }
 
 string GlavniStroj::IspisiBinarnePodatke(byte *podaci, int velicina)

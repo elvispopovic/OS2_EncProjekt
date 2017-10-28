@@ -136,13 +136,15 @@ void ProjektFrame::KriptirajPoruku( wxCommandEvent& event )
     if(!(porukaSadrzaj.empty())&&(aplikacija!=nullptr))
         if(btnKriptirajPoruku->GetLabel()==wxString(L"Enkriptiraj"))
         {
-            aplikacija->EnkriptirajPoruku(porukaSadrzaj);
+            if(!aplikacija->EnkriptirajPoruku(porukaSadrzaj))
+                return;
             aplikacija->DohvatiMedjuspremnikPoruke(porukaSadrzaj);
             btnKriptirajPoruku->SetLabel(wxT("Dekriptiraj"));
         }
         else
         {
-            aplikacija->DekriptirajPoruku(porukaSadrzaj);
+            if(!aplikacija->DekriptirajPoruku(porukaSadrzaj))
+                return;
             aplikacija->DohvatiMedjuspremnikPoruke(porukaSadrzaj);
             btnKriptirajPoruku->SetLabel(wxT("Enkriptiraj"));
         }

@@ -33,8 +33,8 @@ class IProjektApp
     public:
     /* tu ce doci metode koje koristi Glavni stroj */
     virtual void KreirajSazetak(const std::vector<unsigned char>& poruka)=0;
-    virtual void EnkriptirajPoruku(const std::vector<unsigned char>& poruka)=0;
-    virtual void DekriptirajPoruku(const std::vector<unsigned char>& poruka)=0;
+    virtual bool EnkriptirajPoruku(const std::vector<unsigned char>& poruka)=0;
+    virtual bool DekriptirajPoruku(const std::vector<unsigned char>& poruka)=0;
     virtual void DohvatiMedjuspremnikPoruke(std::vector<unsigned char>& poruka)=0;
     virtual void AzurirajGrafickePodatke(const GrafickiPodaci& podaci)=0;
     virtual void UpisiAktivneKljuceve(CryptoPP::SecByteBlock& aesKljuc, CryptoPP::SecByteBlock& iv)=0;
