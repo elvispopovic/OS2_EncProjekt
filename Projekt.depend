@@ -3475,3 +3475,360 @@
 	<iomanip>
 	"ProjektFrame.h"
 
+1509151464 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\glavnistroj.cpp
+	"GlavniStroj.h"
+
+1509151319 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\glavnistroj.h
+	<modes.h>
+	<aes.h>
+	<sha.h>
+	<filters.h>
+	<hex.h>
+	<base64.h>
+	<osrng.h>
+	<hkdf.h>
+	<pwdbased.h>
+	<rsa.h>
+	<files.h>
+	"GUIFrame.h"
+	"Interfaces.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\modes.h
+	"cryptlib.h"
+	"secblock.h"
+	"misc.h"
+	"strciphr.h"
+	"argnames.h"
+	"algparam.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\cryptlib.h
+	"config.h"
+	"stdcpp.h"
+	"trap.h"
+	<signal.h>
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\config.h
+	<malloc.h>
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\stdcpp.h
+	<intrin.h>
+	<string>
+	<memory>
+	<exception>
+	<typeinfo>
+	<algorithm>
+	<functional>
+	<utility>
+	<vector>
+	<limits>
+	<deque>
+	<list>
+	<map>
+	<new>
+	<iterator>
+	<atomic>
+	<mutex>
+	<utility>
+	<cstdlib>
+	<cstddef>
+	<cstring>
+	<climits>
+	<stdint.h>
+	<stddef.h>
+	<vector.cc>
+	<stdlib.h>
+	<alloca.h>
+	<malloc.h>
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\trap.h
+	"config.h"
+	<iostream>
+	<sstream>
+	"ossig.h"
+	<intrin.h>
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\ossig.h
+	"config.h"
+	<signal.h>
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\secblock.h
+	"config.h"
+	"stdcpp.h"
+	"misc.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\misc.h
+	"config.h"
+	"cryptlib.h"
+	"stdcpp.h"
+	"smartptr.h"
+	<intrin.h>
+	<mem.h>
+	<stdlib.h>
+	<byteswap.h>
+	<immintrin.h>
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\smartptr.h
+	"config.h"
+	"stdcpp.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\strciphr.h
+	"config.h"
+	"cryptlib.h"
+	"seckey.h"
+	"secblock.h"
+	"argnames.h"
+	"strciphr.cpp"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\seckey.h
+	"config.h"
+	"cryptlib.h"
+	"misc.h"
+	"simple.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\simple.h
+	"config.h"
+	"cryptlib.h"
+	"misc.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\argnames.h
+	"cryptlib.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\algparam.h
+	"config.h"
+	"cryptlib.h"
+	"smartptr.h"
+	"secblock.h"
+	"integer.h"
+	"misc.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\integer.h
+	"cryptlib.h"
+	"secblock.h"
+	"stdcpp.h"
+	<iosfwd>
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\aes.h
+	"rijndael.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\rijndael.h
+	"seckey.h"
+	"secblock.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\sha.h
+	"config.h"
+	"iterhash.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\iterhash.h
+	"cryptlib.h"
+	"secblock.h"
+	"misc.h"
+	"simple.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\filters.h
+	"cryptlib.h"
+	"cryptlib.h"
+	"simple.h"
+	"secblock.h"
+	"misc.h"
+	"smartptr.h"
+	"queue.h"
+	"algparam.h"
+	"stdcpp.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\queue.h
+	"cryptlib.h"
+	"simple.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\hex.h
+	"cryptlib.h"
+	"basecode.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\basecode.h
+	"cryptlib.h"
+	"filters.h"
+	"algparam.h"
+	"argnames.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\base64.h
+	"cryptlib.h"
+	"basecode.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\osrng.h
+	"config.h"
+	"cryptlib.h"
+	"randpool.h"
+	"smartptr.h"
+	"fips140.h"
+	"rng.h"
+	"aes.h"
+	"sha.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\randpool.h
+	"cryptlib.h"
+	"filters.h"
+	"secblock.h"
+	"smartptr.h"
+	"aes.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\fips140.h
+	"cryptlib.h"
+	"secblock.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\rng.h
+	"cryptlib.h"
+	"filters.h"
+	"smartptr.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\hkdf.h
+	"cryptlib.h"
+	"hrtimer.h"
+	"secblock.h"
+	"hmac.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\hrtimer.h
+	"config.h"
+	<time.h>
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\hmac.h
+	"seckey.h"
+	"secblock.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\pwdbased.h
+	"cryptlib.h"
+	"hrtimer.h"
+	"integer.h"
+	"hmac.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\rsa.h
+	"cryptlib.h"
+	"pubkey.h"
+	"integer.h"
+	"pkcspad.h"
+	"oaep.h"
+	"emsa2.h"
+	"asn.h"
+
+1508368955 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\pubkey.h
+	"config.h"
+	"cryptlib.h"
+	"integer.h"
+	"algebra.h"
+	"modarith.h"
+	"filters.h"
+	"eprecomp.h"
+	"fips140.h"
+	"argnames.h"
+	"smartptr.h"
+	"stdcpp.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\algebra.h
+	"config.h"
+	"misc.h"
+	"integer.h"
+	"algebra.cpp"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\modarith.h
+	"cryptlib.h"
+	"integer.h"
+	"algebra.h"
+	"secblock.h"
+	"misc.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\eprecomp.h
+	"cryptlib.h"
+	"integer.h"
+	"algebra.h"
+	"stdcpp.h"
+	"eprecomp.cpp"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\pkcspad.h
+	"cryptlib.h"
+	"pubkey.h"
+	"sha.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\oaep.h
+	"cryptlib.h"
+	"pubkey.h"
+	"sha.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\emsa2.h
+	"cryptlib.h"
+	"pubkey.h"
+	"misc.h"
+	"sha.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\asn.h
+	"cryptlib.h"
+	"filters.h"
+	"smartptr.h"
+	"stdcpp.h"
+	"queue.h"
+	"misc.h"
+
+1476146994 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\crypto\files.h
+	"cryptlib.h"
+	"filters.h"
+	"argnames.h"
+	"smartptr.h"
+	<iostream>
+	<fstream>
+
+1509152062 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\guiframe.h
+	<wx/artprov.h>
+	<wx/xrc/xmlres.h>
+	<wx/string.h>
+	<wx/bitmap.h>
+	<wx/image.h>
+	<wx/icon.h>
+	<wx/menu.h>
+	<wx/gdicmn.h>
+	<wx/font.h>
+	<wx/colour.h>
+	<wx/settings.h>
+	<wx/statusbr.h>
+	<wx/textctrl.h>
+	<wx/checkbox.h>
+	<wx/sizer.h>
+	<wx/statbox.h>
+	<wx/radiobox.h>
+	<wx/button.h>
+	<wx/statline.h>
+	<wx/stattext.h>
+	<wx/frame.h>
+
+1509149689 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\interfaces.h
+
+1509153065 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\guiframe.cpp
+	"wx/wxprec.h"
+	<wx/wx.h>
+	"GUIFrame.h"
+
+1509151421 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\projektapp.cpp
+	"wx_pch.h"
+	"ProjektApp.h"
+	"ProjektFrame.h"
+
+1509149689 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\projektapp.h
+	<wx/wx.h>
+	<wx/app.h>
+	<mutex>
+	"GlavniStroj.h"
+	"Interfaces.h"
+
+1509111807 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\projektframe.h
+	"ProjektApp.h"
+	"GUIFrame.h"
+
+1509151554 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\projektframe.cpp
+	"wx_pch.h"
+	<wx/wfstream.h>
+	<wx/txtstrm.h>
+	<wx/filedlg.h>
+	<wx/stdpaths.h>
+	<sstream>
+	<iomanip>
+	"ProjektFrame.h"
+
+1446671340 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\resource.rc
+	"wx/msw/wx.rc"
+

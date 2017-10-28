@@ -34,9 +34,6 @@ bool GlavniStroj::GenerirajAESKljuc(const string& lozinka, VelicinaKljuca& velic
     else
         aesRng.GenerateBlock(aesKljuc,velicina);
 
-
-
-    GrafickiPodaci podaci;
     podaci.aesKljuc.assign(IspisiBinarnePodatke(aesKljuc.data(),aesKljuc.size()));
     podaci.iv.assign(IspisiBinarnePodatke(iv.data(),iv.size()));
     if(koristiSol)
@@ -47,10 +44,20 @@ bool GlavniStroj::GenerirajAESKljuc(const string& lozinka, VelicinaKljuca& velic
     projektApp->AzurirajGrafickePodatke(podaci);
 
 }
+
+void GlavniStroj::KreirajSazetak(const vector<unsigned char>& poruka)
+{
+    SHA512 sha;
+    StringSink sazetakSink(podaci.sazetak);
+    ArraySource(poruka.data(), poruka.size(), true, new HashFilter(sha, new HexEncoder(new Redirector(sazetakSink))));
+    projektApp->AzurirajGrafickePodatke(podaci);
+
+}
+
 void GlavniStroj::EnkriptirajPoruku(const vector<unsigned char>& poruka, vector<unsigned char>& enkriptirano)
 {
     wstring upis;
-    CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption enkriptor;
+    CBC_Mode<CryptoPP::AES>::Encryption enkriptor;
     if(aesKljuc.size()==0)
         return;
     enkriptor.SetKeyWithIV(aesKljuc.BytePtr(), aesKljuc.size(), iv.BytePtr(), iv.size());

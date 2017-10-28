@@ -9,12 +9,14 @@ struct GrafickiPodaci
     std::string aesKljuc;
     std::string sol;
     std::string iv;
+    std::string sazetak;
 };
 
 class IProjektApp
 {
     public:
     /* tu ce doci metode koje koristi Glavni stroj */
+    virtual void KreirajSazetak(const std::vector<unsigned char>& poruka)=0;
     virtual void EnkriptirajPoruku(const std::vector<unsigned char>& poruka)=0;
     virtual void DekriptirajPoruku(const std::vector<unsigned char>& poruka)=0;
     virtual void DohvatiMedjuspremnikPoruke(std::vector<unsigned char>& poruka)=0;

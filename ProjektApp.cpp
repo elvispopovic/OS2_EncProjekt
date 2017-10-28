@@ -63,6 +63,11 @@ void ProjektApp::DohvatiMedjuspremnikPoruke(std::vector<unsigned char>& poruka)
     poruka=medjuspremnikPoruke;
 }
 
+void ProjektApp::KreirajSazetak(const std::vector<unsigned char>& poruka)
+{
+    glavniStroj->KreirajSazetak(poruka);
+}
+
 void ProjektApp::AzurirajGrafickePodatke(const GrafickiPodaci& podaci)
 {
     std::lock_guard<std::mutex> lock( m_grafickiPodaci );
@@ -71,6 +76,7 @@ void ProjektApp::AzurirajGrafickePodatke(const GrafickiPodaci& podaci)
     grafickiPodaci->aesKljuc.assign(podaci.aesKljuc);
     grafickiPodaci->iv.assign(podaci.iv);
     grafickiPodaci->sol.assign(podaci.sol);
+    grafickiPodaci->sazetak.assign(podaci.sazetak);
     commandEvent->SetEventObject( (wxObject *)this );
     commandEvent->SetClientData((void *)grafickiPodaci);
     wxQueueEvent( wxGlavnaFormaDest, commandEvent );

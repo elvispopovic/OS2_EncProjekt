@@ -158,8 +158,8 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizer8;
 	bSizer8 = new wxBoxSizer( wxVERTICAL );
 	
-	txtPoruka = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxNO_BORDER|wxVSCROLL );
-	txtPoruka->SetFont( wxFont( 9, 74, 90, 90, false, wxT("Arial") ) );
+	txtPoruka = new wxTextCtrl( sbSizer3->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxNO_BORDER );
+	txtPoruka->SetFont( wxFont( 9, 75, 90, 90, false, wxT("Lucida Console") ) );
 	txtPoruka->SetMinSize( wxSize( -1,200 ) );
 	
 	bSizer8->Add( txtPoruka, 0, wxEXPAND, 5 );
@@ -172,14 +172,25 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	bSizer9->Add( btnKriptirajPoruku, 0, wxALL, 5 );
 	
+	wxStaticBoxSizer* sbSizer4;
+	sbSizer4 = new wxStaticBoxSizer( new wxStaticBox( sbSizer3->GetStaticBox(), wxID_ANY, wxT("Sažetak poruke") ), wxVERTICAL );
 	
-	bSizer8->Add( bSizer9, 1, 0, 5 );
+	tbSazetak = new wxTextCtrl( sbSizer4->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxNO_BORDER|wxVSCROLL );
+	tbSazetak->SetFont( wxFont( 10, 75, 90, 90, false, wxT("Lucida Console") ) );
+	
+	sbSizer4->Add( tbSazetak, 1, wxEXPAND, 5 );
+	
+	
+	bSizer9->Add( sbSizer4, 1, wxEXPAND, 5 );
+	
+	
+	bSizer8->Add( bSizer9, 1, wxEXPAND, 5 );
 	
 	
 	sbSizer3->Add( bSizer8, 1, wxEXPAND, 5 );
 	
 	
-	bSizer1->Add( sbSizer3, 1, wxEXPAND, 5 );
+	bSizer1->Add( sbSizer3, 1, wxEXPAND|wxLEFT|wxRIGHT, 5 );
 	
 	
 	this->SetSizer( bSizer1 );

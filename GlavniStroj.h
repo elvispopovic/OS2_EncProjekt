@@ -22,6 +22,7 @@ class GlavniStroj : public wxFrame
         GlavniStroj(IProjektApp *projektApp);
         virtual ~GlavniStroj();
         virtual bool GenerirajAESKljuc(const std::string& lozinka, VelicinaKljuca& velicina, int brojIteracija, bool koristiSol);
+        virtual void KreirajSazetak(const std::vector<unsigned char>& poruka);
         virtual void EnkriptirajPoruku(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& enkriptirano);
         virtual void DekriptirajPoruku(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& dekriptirano);
 
@@ -31,6 +32,7 @@ class GlavniStroj : public wxFrame
 
     private:
         wchar_t *ispis;
+        GrafickiPodaci podaci;
         std::string IspisiBinarnePodatke(byte *podaci, int velicina);
 
 };

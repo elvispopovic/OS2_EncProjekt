@@ -62,6 +62,7 @@ class GUIFrame : public wxFrame
 		wxTextCtrl* tbGeneriraniAES;
 		wxTextCtrl* txtPoruka;
 		wxButton* btnKriptirajPoruku;
+		wxTextCtrl* tbSazetak;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
@@ -75,7 +76,7 @@ class GUIFrame : public wxFrame
 	
 	public:
 		
-		GUIFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Projekt (Operacijski sustavi 2)"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 512,625 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		GUIFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Projekt (Operacijski sustavi 2)"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 512,680 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~GUIFrame();
 	

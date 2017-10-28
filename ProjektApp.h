@@ -21,6 +21,7 @@ class ProjektApp : public wxApp, IProjektApp
         virtual bool OnInit();
         virtual int  OnExit();
         virtual void GenerirajAESKljuc(const std::string& lozinka, VelicinaKljuca velicina, bool koristiSol);
+        virtual void KreirajSazetak(const std::vector<unsigned char>& poruka);
         virtual void EnkriptirajPoruku(const std::vector<unsigned char>& poruka);
         virtual void DekriptirajPoruku(const std::vector<unsigned char>& poruka);
         virtual void DohvatiMedjuspremnikPoruke(std::vector<unsigned char>& poruka);

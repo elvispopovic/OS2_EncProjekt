@@ -123,7 +123,10 @@ void ProjektFrame::UcitajPoruku( wxCommandEvent& event )
             break;
         }
     upis.append(wxString::Format(L"\n"));
+    txtPoruka->Clear();
     txtPoruka->AppendText(upis);
+
+    aplikacija->KreirajSazetak(porukaSadrzaj);
 
     btnKriptirajPoruku->Enable();
     btnKriptirajPoruku->SetLabel(wxT("Enkriptiraj"));
@@ -183,6 +186,7 @@ void ProjektFrame::OsvjeziPodatke(wxCommandEvent &event)
     tbGeneriraniAES->SetValue(podaci->aesKljuc);
     tbIv->SetValue(podaci->iv);
     tbSol->SetValue(podaci->sol);
+    tbSazetak->SetValue(podaci->sazetak);
 }
 void ProjektFrame::UpisiULog(wxCommandEvent &event)
 {
