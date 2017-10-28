@@ -20,21 +20,23 @@ class ProjektApp : public wxApp, IProjektApp
     public:
         virtual bool OnInit();
         virtual int  OnExit();
-        virtual void GenerirajAESKljuc(const std::string& lozinka, VelicinaKljuca velicina, bool koristiSol);
+        virtual void GenerirajAESKljuc(IDijalogAES *dijalog, const std::string& lozinka, VelicinaKljuca velicina, bool koristiSol, GrafickiPodaci& povratniPodaci);
         virtual void KreirajSazetak(const std::vector<unsigned char>& poruka);
         virtual void EnkriptirajPoruku(const std::vector<unsigned char>& poruka);
         virtual void DekriptirajPoruku(const std::vector<unsigned char>& poruka);
         virtual void DohvatiMedjuspremnikPoruke(std::vector<unsigned char>& poruka);
         virtual void AzurirajGrafickePodatke(const GrafickiPodaci& podaci);
-        virtual void UpisiPoruku(std::wstring& sadrzaj);
+        virtual void UpisiAktivneKljuceve(CryptoPP::SecByteBlock& aesKljuc, CryptoPP::SecByteBlock& iv);
+        virtual void ZahtijevajAzuriranjeGrafickihPodataka();
+        virtual void UpisiPoruku(PorukaPodaci& porukaPodaci);
     protected:
-        std::mutex m_upisULog;
         wxEvtHandler *wxGlavnaFormaDest;
     private:
         bool ispisivanjeDozvoljeno;
-        std::mutex m_grafickiPodaci;
+        std::mutex m_grafickiPodaci, m_porukaPodaci;
         std::vector<unsigned char> medjuspremnikPoruke;
         GrafickiPodaci *grafickiPodaci;
+        PorukaPodaci *porukaPodaci;
         GlavniStroj *glavniStroj;
 };
 

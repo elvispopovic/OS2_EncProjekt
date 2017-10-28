@@ -60,7 +60,7 @@ ProjektFrame::ProjektFrame(wxFrame *frame, ProjektApp *app)
 {
     aplikacija = app;
     Bind(wxOsvjeziPodatke, &ProjektFrame::OsvjeziPodatke, this);
-    Bind(wxIspisiULog, &ProjektFrame::UpisiULog, this);
+    Bind(wxIspisiPoruku, &ProjektFrame::IspisiPoruku, this);
 
 #if wxUSE_STATUSBAR
     statusBar->SetStatusText(_("Hello Code::Blocks user!"), 0);
@@ -75,7 +75,7 @@ ProjektFrame::~ProjektFrame()
 
 void ProjektFrame::OnClose(wxCloseEvent &event)
 {
-    Unbind(wxIspisiULog, &ProjektFrame::UpisiULog, this);
+    Unbind(wxIspisiPoruku, &ProjektFrame::IspisiPoruku, this);
     Unbind(wxOsvjeziPodatke, &ProjektFrame::OsvjeziPodatke, this);
     Destroy();
 }
@@ -113,7 +113,6 @@ void ProjektFrame::UcitajPoruku( wxCommandEvent& event )
     porukaSadrzaj.assign((std::istreambuf_iterator<char>(citanje_datoteke)), (std::istreambuf_iterator<char>()));
 
     std::vector<unsigned char>::iterator it;
-    upis.Printf(L"Učitana je datoteka sadržaja:\n");
     for(brojac = 0, it = porukaSadrzaj.begin(); it!=porukaSadrzaj.end(); ++it, ++brojac)
         if(brojac++<1024)
             upis.append(wxString::Format("%0X",(int)(*it)));
@@ -125,7 +124,7 @@ void ProjektFrame::UcitajPoruku( wxCommandEvent& event )
     upis.append(wxString::Format(L"\n"));
     txtPoruka->Clear();
     txtPoruka->AppendText(upis);
-
+    okvirPoruke->GetStaticBox()->SetLabel(L"Poruka - učitana datoteka");
     aplikacija->KreirajSazetak(porukaSadrzaj);
 
     btnKriptirajPoruku->Enable();
@@ -163,7 +162,46 @@ void ProjektFrame::OnAbout(wxCommandEvent &event)
     wxMessageBox(msg, _("Podrav! "));
 }
 
-void ProjektFrame::GenerirajAES( wxCommandEvent& event )
+void ProjektFrame::AESDijalog( wxCommandEvent& event )
+{
+    DijalogAES *dijalog = new DijalogAES(0L,this,this->aplikacija);
+    //dijalog->upisiAdreseAdaptera(adreseAdaptera);
+    dijalog->Show();
+}
+
+void ProjektFrame::OsvjeziPodatke(wxCommandEvent &event)
+{
+    GrafickiPodaci *podaci;
+    if((podaci = (GrafickiPodaci *)(event.GetClientData()))==nullptr)
+        return;
+    tbAESKljuc->SetValue(podaci->aesKljuc);
+    tbIv->SetValue(podaci->iv);
+    tbSazetak->SetValue(podaci->sazetak);
+}
+void ProjektFrame::IspisiPoruku(wxCommandEvent &event)
+{
+    PorukaPodaci *podaci;
+    if((podaci = (PorukaPodaci *)(event.GetClientData()))==nullptr)
+        return;
+    txtPoruka->Clear();
+    if(podaci->sadrzaj.size()>0)
+        txtPoruka->AppendText(podaci->sadrzaj.c_str());
+    if(podaci->oznaka.size()>0)
+        okvirPoruke->GetStaticBox()->SetLabel(podaci->oznaka.c_str());
+}
+
+/****************************************************************************************/
+/*           DIJALOG AES                                                                */
+/****************************************************************************************/
+
+DijalogAES::DijalogAES(wxFrame *frame, ProjektFrame *pf, ProjektApp *app)
+    : GeneratorAES(frame)
+{
+    aplikacija = app;
+    projektFrame = pf;
+}
+
+void DijalogAES::GenerirajAES( wxCommandEvent& event )
 {
     VelicinaKljuca velicina;
     switch(radioVelicinaKljuca->GetSelection())
@@ -173,25 +211,26 @@ void ProjektFrame::GenerirajAES( wxCommandEvent& event )
         case 2: velicina=VelicinaKljuca::Veliki; break;
         default: velicina=VelicinaKljuca::Srednji;
     }
-    aplikacija->GenerirajAESKljuc(tcUnosLozinke->GetValue().ToStdString(),velicina, chkSol->GetValue());
+    aplikacija->GenerirajAESKljuc(this, tcUnosLozinke->GetValue().ToStdString(),velicina, chkSol->GetValue(), podaci);
+    tbGeneriraniAES->SetValue(podaci.aesKljuc);
+    tbIv->SetValue(podaci.iv);
+    tbSol->SetValue(podaci.sol);
 }
 
-void ProjektFrame::OsvjeziPodatke(wxCommandEvent &event)
+void DijalogAES::odustani( wxCommandEvent& event )
 {
-    GrafickiPodaci *podaci;
-    if(tbGeneriraniAES==nullptr||tbIv==nullptr||tbSol==nullptr)
-        return;
-    if((podaci = (GrafickiPodaci *)(event.GetClientData()))==nullptr)
-        return;
-    tbGeneriraniAES->SetValue(podaci->aesKljuc);
-    tbIv->SetValue(podaci->iv);
-    tbSol->SetValue(podaci->sol);
-    tbSazetak->SetValue(podaci->sazetak);
+    Destroy();
 }
-void ProjektFrame::UpisiULog(wxCommandEvent &event)
+
+void DijalogAES::potvrdi( wxCommandEvent& event )
 {
-    txtPoruka->Clear();
-    wxString ispis(event.GetString());
-    if(ispis.size()>0)
-        txtPoruka->AppendText(ispis.c_str());
+    aplikacija->UpisiAktivneKljuceve(podaci.sbAesKljuc, podaci.sbIv);
+    aplikacija->ZahtijevajAzuriranjeGrafickihPodataka();
+    Destroy();
+}
+
+void DijalogAES::zatvori( wxCloseEvent& event )
+{
+    aplikacija->ZahtijevajAzuriranjeGrafickihPodataka();
+    Destroy();
 }

@@ -21,12 +21,13 @@
 IMPLEMENT_APP(ProjektApp);
 
 wxDEFINE_EVENT(wxOsvjeziPodatke, wxCommandEvent);
-wxDEFINE_EVENT(wxIspisiULog, wxCommandEvent);
+wxDEFINE_EVENT(wxIspisiPoruku, wxCommandEvent);
 
 bool ProjektApp::OnInit()
 {
     ProjektFrame* frame = new ProjektFrame(0L, this);
     grafickiPodaci = new GrafickiPodaci;
+    porukaPodaci = new PorukaPodaci;
     frame->SetIcon(wxICON(aaaa)); // To Set App Icon
     frame->Show();
     wxGlavnaFormaDest = (wxEvtHandler*)frame;
@@ -41,12 +42,13 @@ int ProjektApp::OnExit()
     ispisivanjeDozvoljeno=false;
     delete glavniStroj;
     delete grafickiPodaci;
+    delete porukaPodaci;
     return 0;
 }
 
-void ProjektApp::GenerirajAESKljuc(const std::string& lozinka, VelicinaKljuca velicina, bool koristiSol)
+void ProjektApp::GenerirajAESKljuc(IDijalogAES *dijalog, const std::string& lozinka, VelicinaKljuca velicina, bool koristiSol, GrafickiPodaci& povratniPodaci)
 {
-    glavniStroj->GenerirajAESKljuc(lozinka,velicina,1024, koristiSol);
+    glavniStroj->GenerirajAESKljuc(lozinka,velicina,1024, koristiSol, povratniPodaci);
 }
 
 void ProjektApp::EnkriptirajPoruku(const std::vector<unsigned char>& poruka)
@@ -70,6 +72,8 @@ void ProjektApp::KreirajSazetak(const std::vector<unsigned char>& poruka)
 
 void ProjektApp::AzurirajGrafickePodatke(const GrafickiPodaci& podaci)
 {
+    if(ispisivanjeDozvoljeno==false)
+        return;
     std::lock_guard<std::mutex> lock( m_grafickiPodaci );
     wxCommandEvent *commandEvent = new wxCommandEvent(wxOsvjeziPodatke);
     commandEvent->SetEventObject( (wxObject *)this );
@@ -82,13 +86,25 @@ void ProjektApp::AzurirajGrafickePodatke(const GrafickiPodaci& podaci)
     wxQueueEvent( wxGlavnaFormaDest, commandEvent );
 }
 
-void ProjektApp::UpisiPoruku(std::wstring& sadrzaj)
+void ProjektApp::UpisiAktivneKljuceve(CryptoPP::SecByteBlock& aesKljuc, CryptoPP::SecByteBlock& iv)
 {
-    wxCommandEvent *dogadjajUpis = new wxCommandEvent(wxIspisiULog);
-    std::lock_guard<std::mutex> lock( m_upisULog);
+    glavniStroj->UpisiAktivneKljuceve(aesKljuc, iv);
+}
+
+void ProjektApp::ZahtijevajAzuriranjeGrafickihPodataka()
+{
+    glavniStroj->ZahtijevajAzuriranjeGrafickihPodataka();
+}
+
+void ProjektApp::UpisiPoruku(PorukaPodaci& porukaPodaci)
+{
     if(ispisivanjeDozvoljeno==false)
         return;
+    std::lock_guard<std::mutex> lock( m_porukaPodaci );
+    wxCommandEvent *dogadjajUpis = new wxCommandEvent(wxIspisiPoruku);
     dogadjajUpis->SetEventObject( (wxObject *)this );
-    dogadjajUpis->SetString( sadrzaj.c_str() );
+    this->porukaPodaci->oznaka = porukaPodaci.oznaka;
+    this->porukaPodaci->sadrzaj = porukaPodaci.sadrzaj;
+    dogadjajUpis->SetClientData((void *)(this->porukaPodaci));
     wxQueueEvent( wxGlavnaFormaDest, dogadjajUpis );
 }

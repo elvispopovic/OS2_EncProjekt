@@ -14,15 +14,15 @@
 #include "GUIFrame.h"
 
 wxDECLARE_EVENT(wxOsvjeziPodatke, wxCommandEvent);
-wxDECLARE_EVENT(wxIspisiULog, wxCommandEvent);
+wxDECLARE_EVENT(wxIspisiPoruku, wxCommandEvent);
 
-class ProjektFrame: public GUIFrame
+class ProjektFrame : public GUIFrame
 {
     public:
         ProjektFrame(wxFrame *frame, ProjektApp *app);
         ~ProjektFrame();
     protected:
-        virtual void GenerirajAES( wxCommandEvent& event );
+        virtual void AESDijalog( wxCommandEvent& event );
     private:
         ProjektApp *aplikacija;
         std::vector<unsigned char> porukaSadrzaj;
@@ -33,7 +33,21 @@ class ProjektFrame: public GUIFrame
         virtual void OnQuit(wxCommandEvent& event);
         virtual void OnAbout(wxCommandEvent& event);
         virtual void OsvjeziPodatke(wxCommandEvent &event);
-        virtual void UpisiULog(wxCommandEvent &event);
+        virtual void IspisiPoruku(wxCommandEvent &event);
+};
+
+class DijalogAES : public GeneratorAES, IDijalogAES
+{
+public:
+        DijalogAES(wxFrame *frame, ProjektFrame *pf, ProjektApp *app);
+private:
+        ProjektApp *aplikacija;
+        ProjektFrame *projektFrame;
+        GrafickiPodaci podaci;
+        virtual void GenerirajAES( wxCommandEvent& event );
+		virtual void odustani( wxCommandEvent& event );
+		virtual void potvrdi( wxCommandEvent& event );
+		virtual void zatvori( wxCloseEvent& event );
 };
 
 #endif // PROJEKTMAIN_H

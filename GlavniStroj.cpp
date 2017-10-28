@@ -6,43 +6,58 @@ using namespace CryptoPP;
 GlavniStroj::GlavniStroj(IProjektApp *projektApp)
 {
     this->projektApp=projektApp;
-    ispis = new wchar_t[16000];
+    ispis = new char[16000];
+    ispisw = new wchar_t[1024];
     //GenerirajAESKljuc(string("Ovo je lozinka"),VelicinaKljuca::SREDNJI, 1024);
 }
 
 GlavniStroj::~GlavniStroj()
 {
+    delete[] ispisw;
     delete[] ispis;
 }
 
-bool GlavniStroj::GenerirajAESKljuc(const string& lozinka, VelicinaKljuca& velicina, int brojIteracija, bool koristiSol=true)
+
+bool GlavniStroj::GenerirajAESKljuc(const string& lozinka, VelicinaKljuca& velicina, int brojIteracija, bool koristiSol, GrafickiPodaci& povratniPodaci)
 {
     AutoSeededX917RNG<CryptoPP::AES> aesRng;
     PKCS5_PBKDF2_HMAC<SHA256> pbkdf;
-    sol.New(velicina);
-    iv.New(AES::BLOCKSIZE);
-    aesKljuc.New(velicina);
-    aesRng.GenerateBlock(sol,velicina);
-    aesRng.GenerateBlock(iv,AES::BLOCKSIZE);
+    povratniPodaci.sbSol.New(velicina);
+    povratniPodaci.sbIv.New(AES::BLOCKSIZE);
+    povratniPodaci.sbAesKljuc.New(velicina);
+    aesRng.GenerateBlock(povratniPodaci.sbSol,velicina);
+    aesRng.GenerateBlock(povratniPodaci.sbIv,AES::BLOCKSIZE);
     if(lozinka.size()>0)
     {
         if(koristiSol)
-            pbkdf.DeriveKey(aesKljuc,velicina,0x00,(byte*)(lozinka.data()),lozinka.size(),sol, sol.size(),brojIteracija);
+            pbkdf.DeriveKey(povratniPodaci.sbAesKljuc,velicina,0x00,(byte*)(lozinka.data()),lozinka.size(),povratniPodaci.sbSol, povratniPodaci.sbSol.size(),brojIteracija);
         else
-            pbkdf.DeriveKey(aesKljuc,velicina,0x00,(byte*)(lozinka.data()),lozinka.size(),nullptr, 0,brojIteracija);
+            pbkdf.DeriveKey(povratniPodaci.sbAesKljuc,velicina,0x00,(byte*)(lozinka.data()),lozinka.size(),nullptr, 0,brojIteracija);
     }
     else
-        aesRng.GenerateBlock(aesKljuc,velicina);
+        aesRng.GenerateBlock(povratniPodaci.sbAesKljuc,velicina);
 
+    povratniPodaci.aesKljuc.assign(IspisiBinarnePodatke(povratniPodaci.sbAesKljuc.data(),povratniPodaci.sbAesKljuc.size()));
+    povratniPodaci.iv.assign(IspisiBinarnePodatke(povratniPodaci.sbIv.data(),povratniPodaci.sbIv.size()));
+    if(koristiSol)
+        povratniPodaci.sol.assign(IspisiBinarnePodatke(povratniPodaci.sbSol.data(),povratniPodaci.sbSol.size()));
+    else
+        povratniPodaci.sol.assign(string(" ---"));
+
+    return true;
+}
+
+bool GlavniStroj::UpisiAktivneKljuceve(CryptoPP::SecByteBlock& aesKljuc, CryptoPP::SecByteBlock& iv)
+{
+    this->aesKljuc=aesKljuc;
+    this->iv=iv;
+}
+
+void GlavniStroj::ZahtijevajAzuriranjeGrafickihPodataka()
+{
     podaci.aesKljuc.assign(IspisiBinarnePodatke(aesKljuc.data(),aesKljuc.size()));
     podaci.iv.assign(IspisiBinarnePodatke(iv.data(),iv.size()));
-    if(koristiSol)
-        podaci.sol.assign(IspisiBinarnePodatke(sol.data(),sol.size()));
-    else
-        podaci.sol.assign(string(" ---"));
-
     projektApp->AzurirajGrafickePodatke(podaci);
-
 }
 
 void GlavniStroj::KreirajSazetak(const vector<unsigned char>& poruka)
@@ -56,7 +71,7 @@ void GlavniStroj::KreirajSazetak(const vector<unsigned char>& poruka)
 
 void GlavniStroj::EnkriptirajPoruku(const vector<unsigned char>& poruka, vector<unsigned char>& enkriptirano)
 {
-    wstring upis;
+    PorukaPodaci upis;
     CBC_Mode<CryptoPP::AES>::Encryption enkriptor;
     if(aesKljuc.size()==0)
         return;
@@ -68,21 +83,24 @@ void GlavniStroj::EnkriptirajPoruku(const vector<unsigned char>& poruka, vector<
         ArraySource(poruka.data(), poruka.size(), true, new StreamTransformationFilter(enkriptor, new Redirector(kriptSink)));
         enkriptirano.resize(kriptSink.TotalPutLength());
         if(poruka.size()>512)
-            swprintf(ispis, L"Kriptirani sadržaj:\n%s...\n",IspisiBinarnePodatke(enkriptirano.data(),512).data());
+            sprintf(ispis, "%s...\n",IspisiBinarnePodatke(enkriptirano.data(),512).data());
         else
-            swprintf(ispis, L"Kriptirani sadržaj:\n%s\n",IspisiBinarnePodatke(enkriptirano.data(),512).data());
-        upis.assign(ispis);
+            sprintf(ispis, "%s\n",IspisiBinarnePodatke(enkriptirano.data(),512).data());
+        swprintf(ispisw,L"Poruka - enkriptirani sadržaj");
+        upis.sadrzaj.assign(ispis);
+        upis.oznaka.assign(ispisw);
+
     }
     catch(exception& e)
     {
-        swprintf(ispis,L"Dogodila se iznimka: poruka se ne može enkriptirati.\n");
+        sprintf(ispis,"---\n");
     }
     projektApp->UpisiPoruku(upis);
 }
 
 void GlavniStroj::DekriptirajPoruku(const vector<unsigned char>& poruka, vector<unsigned char>& dekriptirano)
 {
-    wstring upis;
+    PorukaPodaci upis;
     CBC_Mode<AES>::Decryption dekriptor;
     if(aesKljuc.size()==0)
         return;
@@ -95,15 +113,19 @@ void GlavniStroj::DekriptirajPoruku(const vector<unsigned char>& poruka, vector<
         ArraySource(poruka.data(), poruka.size(), true, new StreamTransformationFilter(dekriptor, new Redirector(dekriptSink)));
         dekriptirano.resize(dekriptSink.TotalPutLength());
         if(poruka.size()>512)
-            swprintf(ispis, L"Dekriptirani sadržaj:\n%s...\n",IspisiBinarnePodatke(dekriptirano.data(),512).data());
+            sprintf(ispis, "%s...\n",IspisiBinarnePodatke(dekriptirano.data(),512).data());
         else
-            swprintf(ispis, L"Dekriptirani sadržaj:\n%s\n",IspisiBinarnePodatke(dekriptirano.data(),512).data());
-        upis.assign(ispis);
+            sprintf(ispis, "%s\n",IspisiBinarnePodatke(dekriptirano.data(),512).data());
+        upis.sadrzaj.assign(ispis);
+        swprintf(ispisw,L"Poruka - dekriptirani sadržaj");
+        upis.sadrzaj.assign(ispis);
+        upis.oznaka.assign(ispisw);
     }
     catch(exception& e)
     {
-        swprintf(ispis,L"Dogodila se iznimka: poruka ne sadrži potreban format za dekriptiranje.\n");
+        sprintf(ispis,"---\n");
     }
+
     projektApp->UpisiPoruku(upis);
 }
 
