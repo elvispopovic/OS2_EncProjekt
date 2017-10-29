@@ -51,7 +51,7 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	this->SetMenuBar( mbar );
 	
-	statusBar = this->CreateStatusBar( 2, wxST_SIZEGRIP, wxID_ANY );
+	statusBar = this->CreateStatusBar( 3, wxST_SIZEGRIP, wxID_ANY );
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	

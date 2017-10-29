@@ -37,20 +37,19 @@ wxString wxbuildinfo(wxbuildinfoformat format)
     if (format == long_f )
     {
 #if defined(__WXMSW__)
-        wxbuild << _T("-Windows");
+        wxbuild << _T("-Windows\n");
 #elif defined(__WXMAC__)
-        wxbuild << _T("-Mac");
+        wxbuild << _T("-Mac\n");
 #elif defined(__UNIX__)
-        wxbuild << _T("-Linux");
+        wxbuild << _T("-Linux\n");
 #endif
 
 #if wxUSE_UNICODE
-        wxbuild << _T("-Unicode build");
+        wxbuild << wxT("Unicode kompilacija sa hrvatskim znakovima\n");
 #else
         wxbuild << _T("-ANSI build");
 #endif // wxUSE_UNICODE
     }
-
     return wxbuild;
 }
 
@@ -63,8 +62,9 @@ ProjektFrame::ProjektFrame(wxFrame *frame, ProjektApp *app)
     Bind(wxIspisiPoruku, &ProjektFrame::IspisiPoruku, this);
 
 #if wxUSE_STATUSBAR
-    statusBar->SetStatusText(_("Hello Code::Blocks user!"), 0);
-    statusBar->SetStatusText(wxbuildinfo(short_f), 1);
+    statusBar->SetStatusText(_("Biblioteka: Crypto++ v.5.6.4"), 0);
+    statusBar->SetStatusText("GUI: "+wxbuildinfo(short_f), 1);
+    statusBar->SetStatusText(wxT("Autor: Elvis Popović"),2);
 #endif
 }
 
@@ -84,8 +84,8 @@ void ProjektFrame::UcitajPoruku( wxCommandEvent& event )
     wchar_t ispis[3];
     wxString upis;
     int brojac;
-    wxFileDialog openFileDialog(this, _("Ucitaj poruku"), "", "",
-                       "textualne datoteke (*.txt)|*.txt", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+    wxFileDialog openFileDialog(this, _("Ucitaj datoteku"), "", "",
+                       "sve datoteke (*.*)|*.*", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
     /* postavljanje direktorija iz kojeg se pokrece aplikacija*/
     wxFileName imeDatoteke(wxStandardPaths::Get().GetExecutablePath());
     openFileDialog.SetDirectory(imeDatoteke.GetPath());
@@ -160,8 +160,12 @@ void ProjektFrame::OnQuit(wxCommandEvent &event)
 
 void ProjektFrame::OnAbout(wxCommandEvent &event)
 {
-    wxString msg = wxbuildinfo(long_f);
-    wxMessageBox(msg, _("Podrav! "));
+    wxString msg = wxString("Informacije o kompilaciji:\n") +
+    wxT("C++ kompiler: GCC-5.1.0-TDM64 MinGW\n")
+    wxT("Kriptografska biblioteka: Crypto++ v. 5.6.4\n")+
+    wxT("Grafički sustav: ")+ wxbuildinfo(long_f)+ "\n" +
+    wxT("Projektna aplikacija iz kolegija \"Operacijski sustavi 2\"\nAutor: Elvis Popović, 2017.");
+    wxMessageBox(msg, _("Informacije"));
 }
 
 void ProjektFrame::AESDijalog( wxCommandEvent& event )
