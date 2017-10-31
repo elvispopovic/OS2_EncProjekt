@@ -20,23 +20,24 @@ struct GrafickiPodaci
 {
     std::string aesKljuc, sol, iv;
     std::string privatniKljuc, javniKljuc;
-    std::string sazetak;
+    std::string sazetakAES, sazetakRSA;
     CryptoPP::SecByteBlock sbAesKljuc, sbIv, sbSol;
 };
 
 struct PorukaPodaci
 {
-    std::wstring oznaka;
-    std::string sadrzaj;
+    std::wstring oznakaAES, oznakaRSA;
+    std::string sadrzajAES, sadrzajRSA;
 };
 
 class IProjektApp
 {
     public:
     /* tu ce doci metode koje koristi Glavni stroj */
-    virtual void KreirajSazetak(const std::vector<unsigned char>& poruka)=0;
-    virtual bool EnkriptirajPoruku(const std::vector<unsigned char>& poruka)=0;
-    virtual bool DekriptirajPoruku(const std::vector<unsigned char>& poruka)=0;
+    virtual void KreirajSazetakAES(const std::vector<unsigned char>& poruka)=0;
+    virtual void KreirajSazetakRSA(const std::vector<unsigned char>& poruka)=0;
+    virtual bool EnkriptirajPorukuAES(const std::vector<unsigned char>& poruka)=0;
+    virtual bool DekriptirajPorukuAES(const std::vector<unsigned char>& poruka)=0;
     virtual void DohvatiMedjuspremnikPoruke(std::vector<unsigned char>& poruka)=0;
     virtual void AzurirajGrafickePodatke(const GrafickiPodaci& podaci)=0;
     virtual void UpisiAktivneKljuceve(CryptoPP::SecByteBlock& aesKljuc, CryptoPP::SecByteBlock& iv)=0;

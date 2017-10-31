@@ -55,23 +55,27 @@ void ProjektApp::GenerirajRSAKljuceve(VelicinaRSAKljuca& velicina, GrafickiPodac
     glavniStroj->GenerirajRSAKljuceve(velicina, povratniPodaci);
 }
 
-bool ProjektApp::EnkriptirajPoruku(const std::vector<unsigned char>& poruka)
+bool ProjektApp::EnkriptirajPorukuAES(const std::vector<unsigned char>& poruka)
 {
-    return glavniStroj->EnkriptirajPoruku(poruka, medjuspremnikPoruke);
+    return glavniStroj->EnkriptirajPorukuAES(poruka, medjuspremnikPoruke);
 }
 
-bool ProjektApp::DekriptirajPoruku(const std::vector<unsigned char>& poruka)
+bool ProjektApp::DekriptirajPorukuAES(const std::vector<unsigned char>& poruka)
 {
-    return glavniStroj->DekriptirajPoruku(poruka, medjuspremnikPoruke);
+    return glavniStroj->DekriptirajPorukuAES(poruka, medjuspremnikPoruke);
 }
 void ProjektApp::DohvatiMedjuspremnikPoruke(std::vector<unsigned char>& poruka)
 {
     poruka=medjuspremnikPoruke;
 }
 
-void ProjektApp::KreirajSazetak(const std::vector<unsigned char>& poruka)
+void ProjektApp::KreirajSazetakAES(const std::vector<unsigned char>& poruka)
 {
-    glavniStroj->KreirajSazetak(poruka);
+    glavniStroj->KreirajSazetakAES(poruka);
+}
+void ProjektApp::KreirajSazetakRSA(const std::vector<unsigned char>& poruka)
+{
+    glavniStroj->KreirajSazetakRSA(poruka);
 }
 
 void ProjektApp::AzurirajGrafickePodatke(const GrafickiPodaci& podaci)
@@ -84,7 +88,8 @@ void ProjektApp::AzurirajGrafickePodatke(const GrafickiPodaci& podaci)
     grafickiPodaci->aesKljuc.assign(podaci.aesKljuc);
     grafickiPodaci->iv.assign(podaci.iv);
     grafickiPodaci->sol.assign(podaci.sol);
-    grafickiPodaci->sazetak.assign(podaci.sazetak);
+    grafickiPodaci->sazetakAES.assign(podaci.sazetakAES);
+    grafickiPodaci->sazetakRSA.assign(podaci.sazetakRSA);
     commandEvent->SetEventObject( (wxObject *)this );
     commandEvent->SetClientData((void *)grafickiPodaci);
     wxQueueEvent( wxGlavnaFormaDest, commandEvent );
@@ -107,8 +112,8 @@ void ProjektApp::UpisiPoruku(PorukaPodaci& porukaPodaci)
     std::lock_guard<std::mutex> lock( m_porukaPodaci );
     wxCommandEvent *dogadjajUpis = new wxCommandEvent(wxIspisiPoruku);
     dogadjajUpis->SetEventObject( (wxObject *)this );
-    this->porukaPodaci->oznaka = porukaPodaci.oznaka;
-    this->porukaPodaci->sadrzaj = porukaPodaci.sadrzaj;
+    this->porukaPodaci->oznakaAES = porukaPodaci.oznakaAES;
+    this->porukaPodaci->sadrzajAES = porukaPodaci.sadrzajAES;
     dogadjajUpis->SetClientData((void *)(this->porukaPodaci));
     wxQueueEvent( wxGlavnaFormaDest, dogadjajUpis );
 }

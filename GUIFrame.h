@@ -56,11 +56,11 @@ class GUIFrame : public wxFrame
 		wxTextCtrl* tbAESKljuc;
 		wxButton* btnAESDijalog;
 		wxTextCtrl* tbIv;
-		wxStaticBoxSizer* okvirPoruke;
+		wxStaticBoxSizer* okvirPorukeAES;
 		wxTextCtrl* txtAESPoruka;
-		wxButton* btnUcitajPoruku;
-		wxButton* btnKriptirajPoruku;
-		wxTextCtrl* tbSazetak;
+		wxButton* btnUcitajPorukuAES;
+		wxButton* btnKriptirajPorukuAES;
+		wxTextCtrl* tbSazetakAES;
 		wxScrolledWindow* m_scrolledWindow2;
 		wxStaticText* m_staticText4;
 		wxTextCtrl* tbRSAPrivatniKljuc;
@@ -69,7 +69,11 @@ class GUIFrame : public wxFrame
 		wxTextCtrl* tbRSAJavniKljuc;
 		wxButton* btnGeneriraj;
 		wxRadioBox* radioVelicinaRSAKljuca;
+		wxStaticBoxSizer* okvirPorukeRSA;
 		wxTextCtrl* txtRSAPoruka;
+		wxButton* btnUcitajPorukuRSA;
+		wxButton* btnKriptirajPorukuRSA;
+		wxTextCtrl* tbSazetakRSA;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
@@ -77,8 +81,11 @@ class GUIFrame : public wxFrame
 		virtual void UcitajPoruku( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AESDijalog( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
-		virtual void KriptirajPoruku( wxCommandEvent& event ) { event.Skip(); }
+		virtual void UcitajPorukuAES( wxCommandEvent& event ) { event.Skip(); }
+		virtual void KriptirajPorukuAES( wxCommandEvent& event ) { event.Skip(); }
 		virtual void GenerirajRSA( wxCommandEvent& event ) { event.Skip(); }
+		virtual void UcitajPorukuRSA( wxCommandEvent& event ) { event.Skip(); }
+		virtual void KriptirajPorukuRSA( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

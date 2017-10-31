@@ -22,9 +22,10 @@ class ProjektApp : public wxApp, IProjektApp
         virtual int  OnExit();
         virtual void GenerirajAESKljuc(IDijalogAES *dijalog, const std::string& lozinka, VelicinaAESKljuca velicina, bool koristiSol, GrafickiPodaci& povratniPodaci);
         virtual void GenerirajRSAKljuceve(VelicinaRSAKljuca& velicina, GrafickiPodaci& povratniPodaci);
-        virtual void KreirajSazetak(const std::vector<unsigned char>& poruka);
-        virtual bool EnkriptirajPoruku(const std::vector<unsigned char>& poruka);
-        virtual bool DekriptirajPoruku(const std::vector<unsigned char>& poruka);
+        virtual void KreirajSazetakAES(const std::vector<unsigned char>& poruka);
+        virtual void KreirajSazetakRSA(const std::vector<unsigned char>& poruka);
+        virtual bool EnkriptirajPorukuAES(const std::vector<unsigned char>& poruka);
+        virtual bool DekriptirajPorukuAES(const std::vector<unsigned char>& poruka);
         virtual void DohvatiMedjuspremnikPoruke(std::vector<unsigned char>& poruka);
         virtual void AzurirajGrafickePodatke(const GrafickiPodaci& podaci);
         virtual void UpisiAktivneKljuceve(CryptoPP::SecByteBlock& aesKljuc, CryptoPP::SecByteBlock& iv);

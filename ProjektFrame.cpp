@@ -67,8 +67,9 @@ ProjektFrame::ProjektFrame(wxFrame *frame, ProjektApp *app)
     statusBar->SetStatusText(wxT("Autor: Elvis Popović"),2);
 #endif
 
-    biljeznica->SetPageText(0,wxT("Simetrično"));
-    biljeznica->SetPageText(1,wxT("Asimetrično"));
+    biljeznica->SetPageText(0,wxT("Simetrično kriptiranje"));
+    biljeznica->SetPageText(1,wxT("Asimetrično kriptiranje"));
+    biljeznica->SetSelection(0);
 }
 
 ProjektFrame::~ProjektFrame()
@@ -84,10 +85,21 @@ void ProjektFrame::OnClose(wxCloseEvent &event)
 }
 void ProjektFrame::UcitajPoruku( wxCommandEvent& event )
 {
+    int stranica;
+    stranica = biljeznica->GetSelection();
+    switch(stranica)
+    {
+        case 0: this->UcitajPorukuAES(event); break;
+        case 1: this->UcitajPorukuRSA(event); break;
+    }
+}
+
+void ProjektFrame::UcitajPorukuAES( wxCommandEvent& event )
+{
     wchar_t ispis[3];
     wxString upis;
     int brojac;
-    wxFileDialog openFileDialog(this, _("Ucitaj datoteku"), "", "",
+    wxFileDialog openFileDialog(this, wxT("Učitaj datoteku"), "", "",
                        "sve datoteke (*.*)|*.*", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
     /* postavljanje direktorija iz kojeg se pokrece aplikacija*/
     wxFileName imeDatoteke(wxStandardPaths::Get().GetExecutablePath());
@@ -113,10 +125,10 @@ void ProjektFrame::UcitajPoruku( wxCommandEvent& event )
         */
 
     std::ifstream citanje_datoteke( openFileDialog.GetPath().ToAscii(), std::ios::binary );
-    porukaSadrzaj.assign((std::istreambuf_iterator<char>(citanje_datoteke)), (std::istreambuf_iterator<char>()));
+    porukaSadrzajAES.assign((std::istreambuf_iterator<char>(citanje_datoteke)), (std::istreambuf_iterator<char>()));
 
     std::vector<unsigned char>::iterator it;
-    for(brojac = 0, it = porukaSadrzaj.begin(); it!=porukaSadrzaj.end(); ++it, ++brojac)
+    for(brojac = 0, it = porukaSadrzajAES.begin(); it!=porukaSadrzajAES.end(); ++it, ++brojac)
         if(brojac++<1024)
             upis.append(wxString::Format("%02X",(int)(*it)));
         else
@@ -127,30 +139,68 @@ void ProjektFrame::UcitajPoruku( wxCommandEvent& event )
     upis.append(wxString::Format(L"\n"));
     txtAESPoruka->Clear();
     txtAESPoruka->AppendText(upis);
-    okvirPoruke->GetStaticBox()->SetLabel(L"Poruka - učitana datoteka");
-    aplikacija->KreirajSazetak(porukaSadrzaj);
 
-    btnKriptirajPoruku->Enable();
-    btnKriptirajPoruku->SetLabel(wxT("Enkriptiraj"));
+    okvirPorukeAES->GetStaticBox()->SetLabel(L"Poruka - učitana datoteka");
+    aplikacija->KreirajSazetakAES(porukaSadrzajAES);
+
+    btnKriptirajPorukuAES->Enable();
+    btnKriptirajPorukuAES->SetLabel(wxT("Enkriptiraj"));
+
 }
 
-void ProjektFrame::KriptirajPoruku( wxCommandEvent& event )
+void ProjektFrame::UcitajPorukuRSA( wxCommandEvent& event )
 {
-    if(!(porukaSadrzaj.empty())&&(aplikacija!=nullptr))
-        if(btnKriptirajPoruku->GetLabel()==wxString(L"Enkriptiraj"))
+    wxString upis;
+    int brojac;
+    wxFileDialog openFileDialog(this, wxT("Učitaj datoteku"), "", "",
+                       "sve datoteke (*.*)|*.*", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+    wxFileName imeDatoteke(wxStandardPaths::Get().GetExecutablePath());
+    openFileDialog.SetDirectory(imeDatoteke.GetPath());
+    if (openFileDialog.ShowModal() == wxID_CANCEL)
+        return;
+
+    std::ifstream citanje_datoteke( openFileDialog.GetPath().ToAscii(), std::ios::binary );
+    porukaSadrzajRSA.assign((std::istreambuf_iterator<char>(citanje_datoteke)), (std::istreambuf_iterator<char>()));
+    std::vector<unsigned char>::iterator it;
+    for(brojac = 0, it = porukaSadrzajRSA.begin(); it!=porukaSadrzajRSA.end(); ++it, ++brojac)
+        if(brojac++<1024)
+            upis.append(wxString::Format("%02X",(int)(*it)));
+        else
         {
-            if(!aplikacija->EnkriptirajPoruku(porukaSadrzaj))
+            upis.append(wxString("..."));
+            break;
+        }
+    upis.append(wxString::Format(L"\n"));
+    txtRSAPoruka->Clear();
+    txtRSAPoruka->AppendText(upis);
+    okvirPorukeRSA->GetStaticBox()->SetLabel(L"Poruka - učitana datoteka");
+    aplikacija->KreirajSazetakRSA(porukaSadrzajRSA);
+
+    btnKriptirajPorukuRSA->Enable();
+    btnKriptirajPorukuRSA->SetLabel(wxT("Enkriptiraj"));
+}
+
+void ProjektFrame::KriptirajPorukuAES( wxCommandEvent& event )
+{
+    if(!(porukaSadrzajAES.empty())&&(aplikacija!=nullptr))
+        if(btnKriptirajPorukuAES->GetLabel()==wxString(L"Enkriptiraj"))
+        {
+            if(!aplikacija->EnkriptirajPorukuAES(porukaSadrzajAES))
                 return;
-            aplikacija->DohvatiMedjuspremnikPoruke(porukaSadrzaj);
-            btnKriptirajPoruku->SetLabel(wxT("Dekriptiraj"));
+            aplikacija->DohvatiMedjuspremnikPoruke(porukaSadrzajAES);
+            btnKriptirajPorukuAES->SetLabel(wxT("Dekriptiraj"));
         }
         else
         {
-            if(!aplikacija->DekriptirajPoruku(porukaSadrzaj))
+            if(!aplikacija->DekriptirajPorukuAES(porukaSadrzajAES))
                 return;
-            aplikacija->DohvatiMedjuspremnikPoruke(porukaSadrzaj);
-            btnKriptirajPoruku->SetLabel(wxT("Enkriptiraj"));
+            aplikacija->DohvatiMedjuspremnikPoruke(porukaSadrzajAES);
+            btnKriptirajPorukuAES->SetLabel(wxT("Enkriptiraj"));
         }
+}
+void ProjektFrame::KriptirajPorukuRSA( wxCommandEvent& event )
+{
+
 }
 
 
@@ -203,7 +253,8 @@ void ProjektFrame::OsvjeziPodatke(wxCommandEvent &event)
         return;
     tbAESKljuc->SetValue(podaci->aesKljuc);
     tbIv->SetValue(podaci->iv);
-    tbSazetak->SetValue(podaci->sazetak);
+    tbSazetakAES->SetValue(podaci->sazetakAES);
+    tbSazetakRSA->SetValue(podaci->sazetakRSA);
 }
 void ProjektFrame::IspisiPoruku(wxCommandEvent &event)
 {
@@ -211,10 +262,10 @@ void ProjektFrame::IspisiPoruku(wxCommandEvent &event)
     if((podaci = (PorukaPodaci *)(event.GetClientData()))==nullptr)
         return;
     txtAESPoruka->Clear();
-    if(podaci->sadrzaj.size()>0)
-        txtAESPoruka->AppendText(podaci->sadrzaj.c_str());
-    if(podaci->oznaka.size()>0)
-        okvirPoruke->GetStaticBox()->SetLabel(podaci->oznaka.c_str());
+    if(podaci->sadrzajAES.size()>0)
+        txtAESPoruka->AppendText(podaci->sadrzajAES.c_str());
+    if(podaci->oznakaAES.size()>0)
+        okvirPorukeAES->GetStaticBox()->SetLabel(podaci->oznakaAES.c_str());
 }
 
 /****************************************************************************************/

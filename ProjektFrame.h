@@ -25,10 +25,13 @@ class ProjektFrame : public GUIFrame
         virtual void AESDijalog( wxCommandEvent& event );
     private:
         ProjektApp *aplikacija;
-        std::vector<unsigned char> porukaSadrzaj;
+        std::vector<unsigned char> porukaSadrzajAES, porukaSadrzajRSA;
         virtual void OnClose(wxCloseEvent& event);
+        virtual void UcitajPorukuAES( wxCommandEvent& event );
+        virtual void UcitajPorukuRSA( wxCommandEvent& event );
         virtual void UcitajPoruku( wxCommandEvent& event );
-        virtual void KriptirajPoruku( wxCommandEvent& event );
+        virtual void KriptirajPorukuAES( wxCommandEvent& event );
+        virtual void KriptirajPorukuRSA( wxCommandEvent& event );
         virtual void GenerirajRSA( wxCommandEvent& event );
         virtual void OnQuit(wxCommandEvent& event);
         virtual void OnAbout(wxCommandEvent& event);

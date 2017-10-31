@@ -69,16 +69,22 @@ void GlavniStroj::ZahtijevajAzuriranjeGrafickihPodataka()
     projektApp->AzurirajGrafickePodatke(podaci);
 }
 
-void GlavniStroj::KreirajSazetak(const vector<unsigned char>& poruka)
+void GlavniStroj::KreirajSazetakAES(const vector<unsigned char>& poruka)
 {
     SHA512 sha;
-    StringSink sazetakSink(podaci.sazetak);
+    StringSink sazetakSink(podaci.sazetakAES);
     ArraySource(poruka.data(), poruka.size(), true, new HashFilter(sha, new HexEncoder(new Redirector(sazetakSink))));
     projektApp->AzurirajGrafickePodatke(podaci);
-
+}
+void GlavniStroj::KreirajSazetakRSA(const vector<unsigned char>& poruka)
+{
+    SHA512 sha;
+    StringSink sazetakSink(podaci.sazetakRSA);
+    ArraySource(poruka.data(), poruka.size(), true, new HashFilter(sha, new HexEncoder(new Redirector(sazetakSink))));
+    projektApp->AzurirajGrafickePodatke(podaci);
 }
 
-bool GlavniStroj::EnkriptirajPoruku(const vector<unsigned char>& poruka, vector<unsigned char>& enkriptirano)
+bool GlavniStroj::EnkriptirajPorukuAES(const vector<unsigned char>& poruka, vector<unsigned char>& enkriptirano)
 {
     PorukaPodaci upis;
     CBC_Mode<CryptoPP::AES>::Encryption enkriptor;
@@ -102,8 +108,8 @@ bool GlavniStroj::EnkriptirajPoruku(const vector<unsigned char>& poruka, vector<
         else
             sprintf(ispis, "%s\n",IspisiBinarnePodatke(enkriptirano.data(),512).data());
         swprintf(ispisw,L"Poruka - enkriptirani sadržaj");
-        upis.sadrzaj.assign(ispis);
-        upis.oznaka.assign(ispisw);
+        upis.sadrzajAES.assign(ispis);
+        upis.oznakaAES.assign(ispisw);
         projektApp->UpisiPoruku(upis);
         return true;
     }
@@ -115,7 +121,7 @@ bool GlavniStroj::EnkriptirajPoruku(const vector<unsigned char>& poruka, vector<
     }
 }
 
-bool GlavniStroj::DekriptirajPoruku(const vector<unsigned char>& poruka, vector<unsigned char>& dekriptirano)
+bool GlavniStroj::DekriptirajPorukuAES(const vector<unsigned char>& poruka, vector<unsigned char>& dekriptirano)
 {
     PorukaPodaci upis;
     CBC_Mode<AES>::Decryption dekriptor;
@@ -144,10 +150,10 @@ bool GlavniStroj::DekriptirajPoruku(const vector<unsigned char>& poruka, vector<
             sprintf(ispis, "%s...\n",IspisiBinarnePodatke(dekriptirano.data(),512).data());
         else
             sprintf(ispis, "%s\n",IspisiBinarnePodatke(dekriptirano.data(),512).data());
-        upis.sadrzaj.assign(ispis);
+        upis.sadrzajAES.assign(ispis);
         swprintf(ispisw,L"Poruka - dekriptirani sadržaj");
-        upis.sadrzaj.assign(ispis);
-        upis.oznaka.assign(ispisw);
+        upis.sadrzajAES.assign(ispis);
+        upis.oznakaAES.assign(ispisw);
         projektApp->UpisiPoruku(upis);
         return true;
     }
