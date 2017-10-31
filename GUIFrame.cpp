@@ -53,16 +53,33 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	statusBar = this->CreateStatusBar( 3, wxST_SIZEGRIP, wxID_ANY );
 	wxBoxSizer* bSizer1;
-	bSizer1 = new wxBoxSizer( wxVERTICAL );
+	bSizer1 = new wxBoxSizer( wxHORIZONTAL );
+	
+	wxBoxSizer* bSizer12;
+	bSizer12 = new wxBoxSizer( wxVERTICAL );
+	
+	
+	bSizer1->Add( bSizer12, 1, wxEXPAND, 5 );
+	
+	biljeznica = new wxAuiNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_scrolledWindow1 = new wxScrolledWindow( biljeznica, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
+	m_scrolledWindow1->SetScrollRate( 5, 5 );
+	m_scrolledWindow1->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNTEXT ) );
+	m_scrolledWindow1->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
+	
+	wxBoxSizer* bSizer11;
+	bSizer11 = new wxBoxSizer( wxVERTICAL );
 	
 	wxStaticBoxSizer* sbSizer10;
-	sbSizer10 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("AES ključ") ), wxVERTICAL );
+	sbSizer10 = new wxStaticBoxSizer( new wxStaticBox( m_scrolledWindow1, wxID_ANY, wxT("AES ključ") ), wxVERTICAL );
 	
 	wxBoxSizer* bSizer22;
 	bSizer22 = new wxBoxSizer( wxVERTICAL );
 	
-	tbAESKljuc = new wxTextCtrl( sbSizer10->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CHARWRAP|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER|wxVSCROLL );
+	tbAESKljuc = new wxTextCtrl( sbSizer10->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CHARWRAP|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxSIMPLE_BORDER|wxVSCROLL );
 	tbAESKljuc->SetFont( wxFont( 10, 75, 90, 90, false, wxT("Lucida Console") ) );
+	tbAESKljuc->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNTEXT ) );
+	tbAESKljuc->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_3DLIGHT ) );
 	tbAESKljuc->SetMinSize( wxSize( -1,36 ) );
 	
 	bSizer22->Add( tbAESKljuc, 0, wxBOTTOM|wxEXPAND|wxLEFT|wxRIGHT, 5 );
@@ -74,44 +91,57 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	sbSizer10->Add( bSizer22, 1, wxEXPAND, 5 );
 	
 	
-	bSizer1->Add( sbSizer10, 0, wxEXPAND|wxLEFT|wxRIGHT, 5 );
+	bSizer11->Add( sbSizer10, 0, wxEXPAND|wxLEFT|wxRIGHT, 5 );
 	
 	wxStaticBoxSizer* sbSizer11;
-	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Inicijalizacijski vektor") ), wxVERTICAL );
+	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox( m_scrolledWindow1, wxID_ANY, wxT("Inicijalizacijski vektor") ), wxVERTICAL );
 	
-	tbIv = new wxTextCtrl( sbSizer11->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CHARWRAP|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxNO_BORDER|wxVSCROLL );
+	tbIv = new wxTextCtrl( sbSizer11->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CHARWRAP|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxSIMPLE_BORDER|wxVSCROLL );
 	tbIv->SetFont( wxFont( 10, 75, 90, 90, false, wxT("Lucida Console") ) );
+	tbIv->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_3DLIGHT ) );
 	tbIv->SetMinSize( wxSize( -1,36 ) );
 	
 	sbSizer11->Add( tbIv, 0, wxALL|wxEXPAND, 5 );
 	
 	
-	bSizer1->Add( sbSizer11, 0, wxALL|wxEXPAND, 5 );
+	bSizer11->Add( sbSizer11, 0, wxALL|wxEXPAND, 5 );
 	
-	okvirPoruke = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Poruka") ), wxVERTICAL );
+	okvirPoruke = new wxStaticBoxSizer( new wxStaticBox( m_scrolledWindow1, wxID_ANY, wxT("Poruka") ), wxVERTICAL );
 	
 	wxBoxSizer* bSizer8;
 	bSizer8 = new wxBoxSizer( wxVERTICAL );
 	
-	txtPoruka = new wxTextCtrl( okvirPoruke->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxNO_BORDER );
-	txtPoruka->SetFont( wxFont( 9, 75, 90, 90, false, wxT("Lucida Console") ) );
-	txtPoruka->SetMinSize( wxSize( -1,200 ) );
+	txtAESPoruka = new wxTextCtrl( okvirPoruke->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CHARWRAP|wxTE_MULTILINE|wxTE_READONLY|wxSIMPLE_BORDER );
+	txtAESPoruka->SetFont( wxFont( 9, 75, 90, 90, false, wxT("Lucida Console") ) );
+	txtAESPoruka->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_3DLIGHT ) );
+	txtAESPoruka->SetMinSize( wxSize( -1,200 ) );
 	
-	bSizer8->Add( txtPoruka, 1, wxEXPAND, 5 );
+	bSizer8->Add( txtAESPoruka, 1, wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
 	
+	wxBoxSizer* bSizer15;
+	bSizer15 = new wxBoxSizer( wxVERTICAL );
+	
+	btnUcitajPoruku = new wxButton( okvirPoruke->GetStaticBox(), wxID_ANY, wxT("Učitaj"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer15->Add( btnUcitajPoruku, 0, wxALL, 5 );
+	
 	btnKriptirajPoruku = new wxButton( okvirPoruke->GetStaticBox(), wxID_ANY, wxT("Enkriptiraj"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnKriptirajPoruku->Enable( false );
 	
-	bSizer9->Add( btnKriptirajPoruku, 0, wxALL, 5 );
+	bSizer15->Add( btnKriptirajPoruku, 0, wxALL, 5 );
+	
+	
+	bSizer9->Add( bSizer15, 0, wxEXPAND, 5 );
 	
 	wxStaticBoxSizer* sbSizer4;
 	sbSizer4 = new wxStaticBoxSizer( new wxStaticBox( okvirPoruke->GetStaticBox(), wxID_ANY, wxT("Sažetak poruke") ), wxVERTICAL );
 	
-	tbSazetak = new wxTextCtrl( sbSizer4->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxNO_BORDER|wxVSCROLL );
+	tbSazetak = new wxTextCtrl( sbSizer4->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxSIMPLE_BORDER|wxVSCROLL );
 	tbSazetak->SetFont( wxFont( 10, 75, 90, 90, false, wxT("Lucida Console") ) );
+	tbSazetak->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNTEXT ) );
+	tbSazetak->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_3DLIGHT ) );
 	tbSazetak->SetMinSize( wxSize( -1,60 ) );
 	
 	sbSizer4->Add( tbSazetak, 1, wxEXPAND, 5 );
@@ -126,7 +156,84 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	okvirPoruke->Add( bSizer8, 1, wxEXPAND, 5 );
 	
 	
-	bSizer1->Add( okvirPoruke, 1, wxEXPAND|wxLEFT|wxRIGHT, 5 );
+	bSizer11->Add( okvirPoruke, 1, wxEXPAND|wxLEFT|wxRIGHT, 5 );
+	
+	
+	m_scrolledWindow1->SetSizer( bSizer11 );
+	m_scrolledWindow1->Layout();
+	bSizer11->Fit( m_scrolledWindow1 );
+	biljeznica->AddPage( m_scrolledWindow1, wxT("a page"), true, wxNullBitmap );
+	m_scrolledWindow2 = new wxScrolledWindow( biljeznica, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
+	m_scrolledWindow2->SetScrollRate( 5, 5 );
+	m_scrolledWindow2->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNTEXT ) );
+	m_scrolledWindow2->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
+	
+	wxBoxSizer* bSizer16;
+	bSizer16 = new wxBoxSizer( wxVERTICAL );
+	
+	wxStaticBoxSizer* sbSizer7;
+	sbSizer7 = new wxStaticBoxSizer( new wxStaticBox( m_scrolledWindow2, wxID_ANY, wxT("Ključevi") ), wxVERTICAL );
+	
+	m_staticText4 = new wxStaticText( sbSizer7->GetStaticBox(), wxID_ANY, wxT("Privatni ključ"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText4->Wrap( -1 );
+	sbSizer7->Add( m_staticText4, 0, wxLEFT, 5 );
+	
+	tbRSAPrivatniKljuc = new wxTextCtrl( sbSizer7->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CHARWRAP|wxTE_MULTILINE|wxSIMPLE_BORDER );
+	tbRSAPrivatniKljuc->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_3DLIGHT ) );
+	tbRSAPrivatniKljuc->SetMinSize( wxSize( -1,150 ) );
+	
+	sbSizer7->Add( tbRSAPrivatniKljuc, 0, wxEXPAND|wxLEFT|wxRIGHT, 5 );
+	
+	m_staticline3 = new wxStaticLine( sbSizer7->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	sbSizer7->Add( m_staticline3, 0, wxEXPAND | wxALL, 5 );
+	
+	m_staticText41 = new wxStaticText( sbSizer7->GetStaticBox(), wxID_ANY, wxT("Javni ključ"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText41->Wrap( -1 );
+	sbSizer7->Add( m_staticText41, 0, wxLEFT, 5 );
+	
+	tbRSAJavniKljuc = new wxTextCtrl( sbSizer7->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CHARWRAP|wxTE_MULTILINE|wxSIMPLE_BORDER );
+	tbRSAJavniKljuc->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_3DLIGHT ) );
+	tbRSAJavniKljuc->SetMinSize( wxSize( -1,100 ) );
+	
+	sbSizer7->Add( tbRSAJavniKljuc, 0, wxEXPAND|wxLEFT|wxRIGHT, 5 );
+	
+	wxBoxSizer* bSizer17;
+	bSizer17 = new wxBoxSizer( wxHORIZONTAL );
+	
+	btnGeneriraj = new wxButton( sbSizer7->GetStaticBox(), wxID_ANY, wxT("Generiraj"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer17->Add( btnGeneriraj, 0, wxLEFT|wxTOP, 10 );
+	
+	wxString radioVelicinaRSAKljucaChoices[] = { wxT("1024"), wxT("2048"), wxT("3072") };
+	int radioVelicinaRSAKljucaNChoices = sizeof( radioVelicinaRSAKljucaChoices ) / sizeof( wxString );
+	radioVelicinaRSAKljuca = new wxRadioBox( sbSizer7->GetStaticBox(), wxID_ANY, wxT("Veličina ključa"), wxDefaultPosition, wxDefaultSize, radioVelicinaRSAKljucaNChoices, radioVelicinaRSAKljucaChoices, 1, wxRA_SPECIFY_ROWS );
+	radioVelicinaRSAKljuca->SetSelection( 0 );
+	bSizer17->Add( radioVelicinaRSAKljuca, 0, wxALL, 5 );
+	
+	
+	sbSizer7->Add( bSizer17, 1, wxEXPAND, 5 );
+	
+	
+	bSizer16->Add( sbSizer7, 0, wxALL|wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer8;
+	sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( m_scrolledWindow2, wxID_ANY, wxT("Poruka") ), wxVERTICAL );
+	
+	txtRSAPoruka = new wxTextCtrl( sbSizer8->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CHARWRAP|wxTE_MULTILINE|wxSIMPLE_BORDER );
+	txtRSAPoruka->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_3DLIGHT ) );
+	txtRSAPoruka->SetMinSize( wxSize( -1,200 ) );
+	
+	sbSizer8->Add( txtRSAPoruka, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	bSizer16->Add( sbSizer8, 0, wxBOTTOM|wxEXPAND|wxLEFT|wxRIGHT, 5 );
+	
+	
+	m_scrolledWindow2->SetSizer( bSizer16 );
+	m_scrolledWindow2->Layout();
+	bSizer16->Fit( m_scrolledWindow2 );
+	biljeznica->AddPage( m_scrolledWindow2, wxT("a page"), false, wxNullBitmap );
+	
+	bSizer1->Add( biljeznica, 1, wxEXPAND | wxALL, 5 );
 	
 	
 	this->SetSizer( bSizer1 );
@@ -139,7 +246,9 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Connect( m_menuItem4->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::AESDijalog ) );
 	this->Connect( menuHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnAbout ) );
 	btnAESDijalog->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::AESDijalog ), NULL, this );
+	btnUcitajPoruku->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::UcitajPoruku ), NULL, this );
 	btnKriptirajPoruku->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::KriptirajPoruku ), NULL, this );
+	btnGeneriraj->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::GenerirajRSA ), NULL, this );
 }
 
 GUIFrame::~GUIFrame()
@@ -151,7 +260,9 @@ GUIFrame::~GUIFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::AESDijalog ) );
 	this->Disconnect( idMenuAbout, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnAbout ) );
 	btnAESDijalog->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::AESDijalog ), NULL, this );
+	btnUcitajPoruku->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::UcitajPoruku ), NULL, this );
 	btnKriptirajPoruku->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::KriptirajPoruku ), NULL, this );
+	btnGeneriraj->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::GenerirajRSA ), NULL, this );
 	
 }
 
@@ -185,11 +296,11 @@ GeneratorAES::GeneratorAES( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	bSizer6->Add( sbSizer2, 1, wxALL|wxEXPAND, 5 );
 	
-	wxString radioVelicinaKljucaChoices[] = { wxT("128"), wxT("192"), wxT("256") };
-	int radioVelicinaKljucaNChoices = sizeof( radioVelicinaKljucaChoices ) / sizeof( wxString );
-	radioVelicinaKljuca = new wxRadioBox( sbSizer1->GetStaticBox(), wxID_ANY, wxT("Veličina ključa [bitova]"), wxDefaultPosition, wxDefaultSize, radioVelicinaKljucaNChoices, radioVelicinaKljucaChoices, 1, wxRA_SPECIFY_ROWS );
-	radioVelicinaKljuca->SetSelection( 0 );
-	bSizer6->Add( radioVelicinaKljuca, 0, wxALL|wxEXPAND, 5 );
+	wxString radioVelicinaAESKljucaChoices[] = { wxT("128"), wxT("192"), wxT("256") };
+	int radioVelicinaAESKljucaNChoices = sizeof( radioVelicinaAESKljucaChoices ) / sizeof( wxString );
+	radioVelicinaAESKljuca = new wxRadioBox( sbSizer1->GetStaticBox(), wxID_ANY, wxT("Veličina ključa [bitova]"), wxDefaultPosition, wxDefaultSize, radioVelicinaAESKljucaNChoices, radioVelicinaAESKljucaChoices, 1, wxRA_SPECIFY_ROWS );
+	radioVelicinaAESKljuca->SetSelection( 0 );
+	bSizer6->Add( radioVelicinaAESKljuca, 0, wxALL|wxEXPAND, 5 );
 	
 	
 	bSizer2->Add( bSizer6, 0, wxEXPAND, 5 );

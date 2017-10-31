@@ -46,9 +46,13 @@ int ProjektApp::OnExit()
     return 0;
 }
 
-void ProjektApp::GenerirajAESKljuc(IDijalogAES *dijalog, const std::string& lozinka, VelicinaKljuca velicina, bool koristiSol, GrafickiPodaci& povratniPodaci)
+void ProjektApp::GenerirajAESKljuc(IDijalogAES *dijalog, const std::string& lozinka, VelicinaAESKljuca velicina, bool koristiSol, GrafickiPodaci& povratniPodaci)
 {
     glavniStroj->GenerirajAESKljuc(lozinka,velicina,1024, koristiSol, povratniPodaci);
+}
+void ProjektApp::GenerirajRSAKljuceve(VelicinaRSAKljuca& velicina, GrafickiPodaci& povratniPodaci)
+{
+    glavniStroj->GenerirajRSAKljuceve(velicina, povratniPodaci);
 }
 
 bool ProjektApp::EnkriptirajPoruku(const std::vector<unsigned char>& poruka)

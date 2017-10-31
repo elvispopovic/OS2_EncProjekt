@@ -13,11 +13,13 @@
 #include <rsa.h>
 #include <files.h>
 
-enum VelicinaKljuca:unsigned char{Mali=16, Srednji=24, Veliki=32};
+enum VelicinaAESKljuca:unsigned char{AES_mali=16, AES_srednji=24, AES_veliki=32};
+enum VelicinaRSAKljuca:unsigned short{RSA_mali=128, RSA_srednji=256, RSA_veliki=384};
 
 struct GrafickiPodaci
 {
     std::string aesKljuc, sol, iv;
+    std::string privatniKljuc, javniKljuc;
     std::string sazetak;
     CryptoPP::SecByteBlock sbAesKljuc, sbIv, sbSol;
 };

@@ -20,15 +20,17 @@
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/statusbr.h>
+#include <wx/sizer.h>
 #include <wx/textctrl.h>
 #include <wx/button.h>
-#include <wx/sizer.h>
 #include <wx/statbox.h>
+#include <wx/scrolwin.h>
+#include <wx/stattext.h>
+#include <wx/statline.h>
+#include <wx/radiobox.h>
+#include <wx/aui/auibook.h>
 #include <wx/frame.h>
 #include <wx/checkbox.h>
-#include <wx/radiobox.h>
-#include <wx/statline.h>
-#include <wx/stattext.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -49,13 +51,25 @@ class GUIFrame : public wxFrame
 		wxMenu* m_menu3;
 		wxMenu* helpMenu;
 		wxStatusBar* statusBar;
+		wxAuiNotebook* biljeznica;
+		wxScrolledWindow* m_scrolledWindow1;
 		wxTextCtrl* tbAESKljuc;
 		wxButton* btnAESDijalog;
 		wxTextCtrl* tbIv;
 		wxStaticBoxSizer* okvirPoruke;
-		wxTextCtrl* txtPoruka;
+		wxTextCtrl* txtAESPoruka;
+		wxButton* btnUcitajPoruku;
 		wxButton* btnKriptirajPoruku;
 		wxTextCtrl* tbSazetak;
+		wxScrolledWindow* m_scrolledWindow2;
+		wxStaticText* m_staticText4;
+		wxTextCtrl* tbRSAPrivatniKljuc;
+		wxStaticLine* m_staticline3;
+		wxStaticText* m_staticText41;
+		wxTextCtrl* tbRSAJavniKljuc;
+		wxButton* btnGeneriraj;
+		wxRadioBox* radioVelicinaRSAKljuca;
+		wxTextCtrl* txtRSAPoruka;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
@@ -64,6 +78,7 @@ class GUIFrame : public wxFrame
 		virtual void AESDijalog( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
 		virtual void KriptirajPoruku( wxCommandEvent& event ) { event.Skip(); }
+		virtual void GenerirajRSA( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -84,7 +99,7 @@ class GeneratorAES : public wxDialog
 	protected:
 		wxTextCtrl* tcUnosLozinke;
 		wxCheckBox* chkSol;
-		wxRadioBox* radioVelicinaKljuca;
+		wxRadioBox* radioVelicinaAESKljuca;
 		wxButton* btnGenerirajAES;
 		wxStaticLine* m_staticline1;
 		wxStaticText* m_staticText2;

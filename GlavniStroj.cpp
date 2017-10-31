@@ -8,7 +8,6 @@ GlavniStroj::GlavniStroj(IProjektApp *projektApp)
     this->projektApp=projektApp;
     ispis = new char[16000];
     ispisw = new wchar_t[1024];
-    //GenerirajAESKljuc(string("Ovo je lozinka"),VelicinaKljuca::SREDNJI, 1024);
 }
 
 GlavniStroj::~GlavniStroj()
@@ -18,7 +17,7 @@ GlavniStroj::~GlavniStroj()
 }
 
 
-bool GlavniStroj::GenerirajAESKljuc(const string& lozinka, VelicinaKljuca& velicina, int brojIteracija, bool koristiSol, GrafickiPodaci& povratniPodaci)
+bool GlavniStroj::GenerirajAESKljuc(const string& lozinka, VelicinaAESKljuca& velicina, int brojIteracija, bool koristiSol, GrafickiPodaci& povratniPodaci)
 {
     AutoSeededX917RNG<CryptoPP::AES> aesRng;
     PKCS5_PBKDF2_HMAC<SHA256> pbkdf;
@@ -45,6 +44,16 @@ bool GlavniStroj::GenerirajAESKljuc(const string& lozinka, VelicinaKljuca& velic
         povratniPodaci.sol.assign(string(" ---"));
 
     return true;
+}
+
+bool GlavniStroj::GenerirajRSAKljuceve(VelicinaRSAKljuca& velicina, GrafickiPodaci& povratniPodaci)
+{
+    AutoSeededRandomPool rsaRng;
+    privatniKljuc.GenerateRandomWithKeySize(rsaRng, velicina<<3);
+    RSA::PublicKey javniKljuc(privatniKljuc);
+
+    privatniKljuc.Save(HexEncoder(new CryptoPP::StringSink(povratniPodaci.privatniKljuc)).Ref());
+    javniKljuc.Save(HexEncoder(new CryptoPP::StringSink(povratniPodaci.javniKljuc)).Ref());
 }
 
 bool GlavniStroj::UpisiAktivneKljuceve(CryptoPP::SecByteBlock& aesKljuc, CryptoPP::SecByteBlock& iv)
@@ -75,6 +84,12 @@ bool GlavniStroj::EnkriptirajPoruku(const vector<unsigned char>& poruka, vector<
     CBC_Mode<CryptoPP::AES>::Encryption enkriptor;
     if(aesKljuc.size()==0)
         return false;
+
+    int brojac=0;
+    for(vector<unsigned char>::const_iterator it=poruka.begin(); brojac<80; ++it, brojac++)
+            cout << (int)(*it) << " ";
+    cout << endl;
+
     enkriptor.SetKeyWithIV(aesKljuc.BytePtr(), aesKljuc.size(), iv.BytePtr(), iv.size());
     enkriptirano.resize(poruka.size()+AES::BLOCKSIZE); //prostor za padding
     ArraySink kriptSink(&enkriptirano[0], enkriptirano.size());
@@ -106,6 +121,9 @@ bool GlavniStroj::DekriptirajPoruku(const vector<unsigned char>& poruka, vector<
     CBC_Mode<AES>::Decryption dekriptor;
     if(aesKljuc.size()==0)
         return false;
+
+
+
     dekriptor.SetKeyWithIV(aesKljuc.BytePtr(), aesKljuc.size(), iv.BytePtr(), iv.size());
     dekriptirano.resize(poruka.size());
     ArraySink dekriptSink(&dekriptirano[0], dekriptirano.size());
@@ -114,6 +132,14 @@ bool GlavniStroj::DekriptirajPoruku(const vector<unsigned char>& poruka, vector<
     {
         ArraySource(poruka.data(), poruka.size(), true, new StreamTransformationFilter(dekriptor, new Redirector(dekriptSink)));
         dekriptirano.resize(dekriptSink.TotalPutLength());
+
+
+        int brojac=0;
+        for(vector<unsigned char>::const_iterator it=dekriptirano.begin(); brojac<80; ++it, brojac++)
+            cout << (int)(*it) << " ";
+        cout << endl;
+
+
         if(poruka.size()>512)
             sprintf(ispis, "%s...\n",IspisiBinarnePodatke(dekriptirano.data(),512).data());
         else
@@ -138,6 +164,7 @@ bool GlavniStroj::DekriptirajPoruku(const vector<unsigned char>& poruka, vector<
 string GlavniStroj::IspisiBinarnePodatke(byte *podaci, int velicina)
 {
     string upis;
+
     /* HexEncoder preuzima objekt i na kraju ga uništava. Zato mora biti StringSink da se saèuva upis*/
     HexEncoder enkoder(new StringSink(upis));
     enkoder.Put(podaci,velicina);

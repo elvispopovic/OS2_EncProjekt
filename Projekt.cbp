@@ -27,6 +27,7 @@
 					<Add library="C:/wxWidgets/lib/gcc510TDM_x64_dll/libwxbase31ud.a" />
 					<Add library="C:/wxWidgets/lib/gcc510TDM_x64_dll/libwxpngd.a" />
 					<Add library="C:/wxWidgets/lib/gcc510TDM_x64_dll/libwxzlibd.a" />
+					<Add library="C:/wxWidgets/lib/gcc510TDM_x64_dll/libwxmsw31ud_aui.a" />
 					<Add directory="C:/wxWidgets/lib/gcc_dll" />
 				</Linker>
 			</Target>
@@ -50,6 +51,7 @@
 					<Add library="C:/wxWidgets/lib/gcc510TDM_x64_dll/libwxbase31u.a" />
 					<Add library="C:/wxWidgets/lib/gcc510TDM_x64_dll/libwxpng.a" />
 					<Add library="C:/wxWidgets/lib/gcc510TDM_x64_dll/libwxzlib.a" />
+					<Add library="C:/wxWidgets/lib/gcc510TDM_x64_dll/libwxmsw31u_aui.a" />
 					<Add directory="C:/wxWidgets/lib/gcc_dll" />
 				</Linker>
 			</Target>

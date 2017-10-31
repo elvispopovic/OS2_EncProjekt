@@ -66,6 +66,9 @@ ProjektFrame::ProjektFrame(wxFrame *frame, ProjektApp *app)
     statusBar->SetStatusText("GUI: "+wxbuildinfo(short_f), 1);
     statusBar->SetStatusText(wxT("Autor: Elvis Popović"),2);
 #endif
+
+    biljeznica->SetPageText(0,wxT("Simetrično"));
+    biljeznica->SetPageText(1,wxT("Asimetrično"));
 }
 
 ProjektFrame::~ProjektFrame()
@@ -115,15 +118,15 @@ void ProjektFrame::UcitajPoruku( wxCommandEvent& event )
     std::vector<unsigned char>::iterator it;
     for(brojac = 0, it = porukaSadrzaj.begin(); it!=porukaSadrzaj.end(); ++it, ++brojac)
         if(brojac++<1024)
-            upis.append(wxString::Format("%0X",(int)(*it)));
+            upis.append(wxString::Format("%02X",(int)(*it)));
         else
         {
             upis.append(wxString("..."));
             break;
         }
     upis.append(wxString::Format(L"\n"));
-    txtPoruka->Clear();
-    txtPoruka->AppendText(upis);
+    txtAESPoruka->Clear();
+    txtAESPoruka->AppendText(upis);
     okvirPoruke->GetStaticBox()->SetLabel(L"Poruka - učitana datoteka");
     aplikacija->KreirajSazetak(porukaSadrzaj);
 
@@ -175,6 +178,24 @@ void ProjektFrame::AESDijalog( wxCommandEvent& event )
     dijalog->Show();
 }
 
+void ProjektFrame::GenerirajRSA( wxCommandEvent& event )
+{
+    VelicinaRSAKljuca velicinaRSA;
+    GrafickiPodaci podaci;
+    switch(radioVelicinaRSAKljuca->GetSelection())
+    {
+        case 0: velicinaRSA=VelicinaRSAKljuca::RSA_mali; break;
+        case 1: velicinaRSA=VelicinaRSAKljuca::RSA_srednji; break;
+        case 2: velicinaRSA=VelicinaRSAKljuca::RSA_veliki; break;
+        default: velicinaRSA=VelicinaRSAKljuca::RSA_srednji;
+    }
+    aplikacija->GenerirajRSAKljuceve(velicinaRSA, podaci);
+    tbRSAPrivatniKljuc->SetValue(podaci.privatniKljuc);
+    tbRSAJavniKljuc->SetValue(podaci.javniKljuc);
+    std::cout << "Privatni kljuc: " << podaci.privatniKljuc << std::endl;
+    std::cout << "Javni kljuc: " << podaci.javniKljuc << std::endl;
+}
+
 void ProjektFrame::OsvjeziPodatke(wxCommandEvent &event)
 {
     GrafickiPodaci *podaci;
@@ -189,9 +210,9 @@ void ProjektFrame::IspisiPoruku(wxCommandEvent &event)
     PorukaPodaci *podaci;
     if((podaci = (PorukaPodaci *)(event.GetClientData()))==nullptr)
         return;
-    txtPoruka->Clear();
+    txtAESPoruka->Clear();
     if(podaci->sadrzaj.size()>0)
-        txtPoruka->AppendText(podaci->sadrzaj.c_str());
+        txtAESPoruka->AppendText(podaci->sadrzaj.c_str());
     if(podaci->oznaka.size()>0)
         okvirPoruke->GetStaticBox()->SetLabel(podaci->oznaka.c_str());
 }
@@ -209,18 +230,22 @@ DijalogAES::DijalogAES(wxFrame *frame, ProjektFrame *pf, ProjektApp *app)
 
 void DijalogAES::GenerirajAES( wxCommandEvent& event )
 {
-    VelicinaKljuca velicina;
-    switch(radioVelicinaKljuca->GetSelection())
+    VelicinaAESKljuca velicinaAES;
+
+    switch(radioVelicinaAESKljuca->GetSelection())
     {
-        case 0: velicina=VelicinaKljuca::Mali; break;
-        case 1: velicina=VelicinaKljuca::Srednji; break;
-        case 2: velicina=VelicinaKljuca::Veliki; break;
-        default: velicina=VelicinaKljuca::Srednji;
+        case 0: velicinaAES=VelicinaAESKljuca::AES_mali; break;
+        case 1: velicinaAES=VelicinaAESKljuca::AES_srednji; break;
+        case 2: velicinaAES=VelicinaAESKljuca::AES_veliki; break;
+        default: velicinaAES=VelicinaAESKljuca::AES_srednji;
     }
-    aplikacija->GenerirajAESKljuc(this, tcUnosLozinke->GetValue().ToStdString(),velicina, chkSol->GetValue(), podaci);
+    aplikacija->GenerirajAESKljuc(this, tcUnosLozinke->GetValue().ToStdString(),velicinaAES, chkSol->GetValue(), podaci);
     tbGeneriraniAES->SetValue(podaci.aesKljuc);
     tbIv->SetValue(podaci.iv);
     tbSol->SetValue(podaci.sol);
+
+
+
 }
 
 void DijalogAES::odustani( wxCommandEvent& event )

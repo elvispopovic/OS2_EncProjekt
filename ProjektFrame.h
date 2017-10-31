@@ -29,7 +29,7 @@ class ProjektFrame : public GUIFrame
         virtual void OnClose(wxCloseEvent& event);
         virtual void UcitajPoruku( wxCommandEvent& event );
         virtual void KriptirajPoruku( wxCommandEvent& event );
-
+        virtual void GenerirajRSA( wxCommandEvent& event );
         virtual void OnQuit(wxCommandEvent& event);
         virtual void OnAbout(wxCommandEvent& event);
         virtual void OsvjeziPodatke(wxCommandEvent &event);
