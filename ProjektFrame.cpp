@@ -187,23 +187,39 @@ void ProjektFrame::KriptirajPorukuAES( wxCommandEvent& event )
         {
             if(!aplikacija->EnkriptirajPorukuAES(porukaSadrzajAES))
                 return;
-            aplikacija->DohvatiMedjuspremnikPoruke(porukaSadrzajAES);
+            aplikacija->DohvatiMedjuspremnikPorukeAES(porukaSadrzajAES);
             btnKriptirajPorukuAES->SetLabel(wxT("Dekriptiraj"));
         }
         else
         {
             if(!aplikacija->DekriptirajPorukuAES(porukaSadrzajAES))
                 return;
-            aplikacija->DohvatiMedjuspremnikPoruke(porukaSadrzajAES);
+            aplikacija->DohvatiMedjuspremnikPorukeAES(porukaSadrzajAES);
             btnKriptirajPorukuAES->SetLabel(wxT("Enkriptiraj"));
         }
 }
 void ProjektFrame::KriptirajPorukuRSA( wxCommandEvent& event )
 {
+    if(!(porukaSadrzajRSA.empty())&&(aplikacija!=nullptr))
+        if(btnKriptirajPorukuRSA->GetLabel()==wxString(L"Enkriptiraj"))
+        {
+            if(!aplikacija->EnkriptirajPorukuRSA(porukaSadrzajRSA))
+            {
+                wxMessageBox(wxT("Sadržaj nije moguće asimetrično kriptirati.\nMogući razlog je da je predugačak."),wxT("Pogreška - RSA"));
+                return;
+            }
 
+            aplikacija->DohvatiMedjuspremnikPorukeRSA(porukaSadrzajRSA);
+            btnKriptirajPorukuRSA->SetLabel(wxT("Dekriptiraj"));
+        }
+        else
+        {
+            if(!aplikacija->DekriptirajPorukuRSA(porukaSadrzajRSA))
+                return;
+            aplikacija->DohvatiMedjuspremnikPorukeRSA(porukaSadrzajRSA);
+            btnKriptirajPorukuRSA->SetLabel(wxT("Enkriptiraj"));
+        }
 }
-
-
 
 void ProjektFrame::OnQuit(wxCommandEvent &event)
 {
@@ -242,8 +258,6 @@ void ProjektFrame::GenerirajRSA( wxCommandEvent& event )
     aplikacija->GenerirajRSAKljuceve(velicinaRSA, podaci);
     tbRSAPrivatniKljuc->SetValue(podaci.privatniKljuc);
     tbRSAJavniKljuc->SetValue(podaci.javniKljuc);
-    std::cout << "Privatni kljuc: " << podaci.privatniKljuc << std::endl;
-    std::cout << "Javni kljuc: " << podaci.javniKljuc << std::endl;
 }
 
 void ProjektFrame::OsvjeziPodatke(wxCommandEvent &event)
@@ -261,11 +275,22 @@ void ProjektFrame::IspisiPoruku(wxCommandEvent &event)
     PorukaPodaci *podaci;
     if((podaci = (PorukaPodaci *)(event.GetClientData()))==nullptr)
         return;
-    txtAESPoruka->Clear();
     if(podaci->sadrzajAES.size()>0)
+    {
+        txtAESPoruka->Clear();
         txtAESPoruka->AppendText(podaci->sadrzajAES.c_str());
+    }
     if(podaci->oznakaAES.size()>0)
         okvirPorukeAES->GetStaticBox()->SetLabel(podaci->oznakaAES.c_str());
+
+    if(podaci->sadrzajRSA.size()>0)
+    {
+        txtRSAPoruka->Clear();
+        txtRSAPoruka->AppendText(podaci->sadrzajRSA.c_str());
+    }
+
+    if(podaci->oznakaRSA.size()>0)
+        okvirPorukeRSA->GetStaticBox()->SetLabel(podaci->oznakaRSA.c_str());
 }
 
 /****************************************************************************************/

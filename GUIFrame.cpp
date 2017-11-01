@@ -179,8 +179,9 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	sbSizer7->Add( m_staticText4, 0, wxLEFT, 5 );
 	
 	tbRSAPrivatniKljuc = new wxTextCtrl( sbSizer7->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CHARWRAP|wxTE_MULTILINE|wxSIMPLE_BORDER );
+	tbRSAPrivatniKljuc->SetFont( wxFont( 9, 75, 90, 90, false, wxT("Lucida Console") ) );
 	tbRSAPrivatniKljuc->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_3DLIGHT ) );
-	tbRSAPrivatniKljuc->SetMinSize( wxSize( -1,150 ) );
+	tbRSAPrivatniKljuc->SetMinSize( wxSize( -1,120 ) );
 	
 	sbSizer7->Add( tbRSAPrivatniKljuc, 0, wxEXPAND|wxLEFT|wxRIGHT, 5 );
 	
@@ -192,8 +193,9 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	sbSizer7->Add( m_staticText41, 0, wxLEFT, 5 );
 	
 	tbRSAJavniKljuc = new wxTextCtrl( sbSizer7->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CHARWRAP|wxTE_MULTILINE|wxSIMPLE_BORDER );
+	tbRSAJavniKljuc->SetFont( wxFont( 9, 75, 90, 90, false, wxT("Lucida Console") ) );
 	tbRSAJavniKljuc->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_3DLIGHT ) );
-	tbRSAJavniKljuc->SetMinSize( wxSize( -1,100 ) );
+	tbRSAJavniKljuc->SetMinSize( wxSize( -1,80 ) );
 	
 	sbSizer7->Add( tbRSAJavniKljuc, 0, wxEXPAND|wxLEFT|wxRIGHT, 5 );
 	
@@ -220,7 +222,7 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	txtRSAPoruka = new wxTextCtrl( okvirPorukeRSA->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CHARWRAP|wxTE_MULTILINE|wxSIMPLE_BORDER );
 	txtRSAPoruka->SetFont( wxFont( 9, 75, 90, 90, false, wxT("Lucida Console") ) );
 	txtRSAPoruka->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_3DLIGHT ) );
-	txtRSAPoruka->SetMinSize( wxSize( -1,200 ) );
+	txtRSAPoruka->SetMinSize( wxSize( -1,100 ) );
 	
 	okvirPorukeRSA->Add( txtRSAPoruka, 0, wxALL|wxEXPAND, 5 );
 	

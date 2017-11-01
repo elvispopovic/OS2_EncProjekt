@@ -26,7 +26,10 @@ class ProjektApp : public wxApp, IProjektApp
         virtual void KreirajSazetakRSA(const std::vector<unsigned char>& poruka);
         virtual bool EnkriptirajPorukuAES(const std::vector<unsigned char>& poruka);
         virtual bool DekriptirajPorukuAES(const std::vector<unsigned char>& poruka);
-        virtual void DohvatiMedjuspremnikPoruke(std::vector<unsigned char>& poruka);
+        virtual bool EnkriptirajPorukuRSA(const std::vector<unsigned char>& poruka);
+        virtual bool DekriptirajPorukuRSA(const std::vector<unsigned char>& poruka);
+        virtual void DohvatiMedjuspremnikPorukeAES(std::vector<unsigned char>& poruka);
+        virtual void DohvatiMedjuspremnikPorukeRSA(std::vector<unsigned char>& poruka);
         virtual void AzurirajGrafickePodatke(const GrafickiPodaci& podaci);
         virtual void UpisiAktivneKljuceve(CryptoPP::SecByteBlock& aesKljuc, CryptoPP::SecByteBlock& iv);
         virtual void ZahtijevajAzuriranjeGrafickihPodataka();
@@ -36,7 +39,7 @@ class ProjektApp : public wxApp, IProjektApp
     private:
         bool ispisivanjeDozvoljeno;
         std::mutex m_grafickiPodaci, m_porukaPodaci;
-        std::vector<unsigned char> medjuspremnikPoruke;
+        std::vector<unsigned char> medjuspremnikPorukeAES, medjuspremnikPorukeRSA;
         GrafickiPodaci *grafickiPodaci;
         PorukaPodaci *porukaPodaci;
         GlavniStroj *glavniStroj;

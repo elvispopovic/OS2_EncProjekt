@@ -38,7 +38,10 @@ class IProjektApp
     virtual void KreirajSazetakRSA(const std::vector<unsigned char>& poruka)=0;
     virtual bool EnkriptirajPorukuAES(const std::vector<unsigned char>& poruka)=0;
     virtual bool DekriptirajPorukuAES(const std::vector<unsigned char>& poruka)=0;
-    virtual void DohvatiMedjuspremnikPoruke(std::vector<unsigned char>& poruka)=0;
+    virtual bool EnkriptirajPorukuRSA(const std::vector<unsigned char>& poruka)=0;
+    virtual bool DekriptirajPorukuRSA(const std::vector<unsigned char>& poruka)=0;
+    virtual void DohvatiMedjuspremnikPorukeAES(std::vector<unsigned char>& poruka)=0;
+    virtual void DohvatiMedjuspremnikPorukeRSA(std::vector<unsigned char>& poruka)=0;
     virtual void AzurirajGrafickePodatke(const GrafickiPodaci& podaci)=0;
     virtual void UpisiAktivneKljuceve(CryptoPP::SecByteBlock& aesKljuc, CryptoPP::SecByteBlock& iv)=0;
     virtual void ZahtijevajAzuriranjeGrafickihPodataka()=0;

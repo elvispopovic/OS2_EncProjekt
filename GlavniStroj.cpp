@@ -97,13 +97,14 @@ bool GlavniStroj::EnkriptirajPorukuAES(const vector<unsigned char>& poruka, vect
     cout << endl;
 
     enkriptor.SetKeyWithIV(aesKljuc.BytePtr(), aesKljuc.size(), iv.BytePtr(), iv.size());
+    enkriptirano.clear();
     enkriptirano.resize(poruka.size()+AES::BLOCKSIZE); //prostor za padding
     ArraySink kriptSink(&enkriptirano[0], enkriptirano.size());
     try
     {
         ArraySource(poruka.data(), poruka.size(), true, new StreamTransformationFilter(enkriptor, new Redirector(kriptSink)));
         enkriptirano.resize(kriptSink.TotalPutLength());
-        if(poruka.size()>512)
+        if(enkriptirano.size()>512)
             sprintf(ispis, "%s...\n",IspisiBinarnePodatke(enkriptirano.data(),512).data());
         else
             sprintf(ispis, "%s\n",IspisiBinarnePodatke(enkriptirano.data(),512).data());
@@ -128,9 +129,8 @@ bool GlavniStroj::DekriptirajPorukuAES(const vector<unsigned char>& poruka, vect
     if(aesKljuc.size()==0)
         return false;
 
-
-
     dekriptor.SetKeyWithIV(aesKljuc.BytePtr(), aesKljuc.size(), iv.BytePtr(), iv.size());
+    dekriptirano.clear();
     dekriptirano.resize(poruka.size());
     ArraySink dekriptSink(&dekriptirano[0], dekriptirano.size());
 
@@ -138,18 +138,10 @@ bool GlavniStroj::DekriptirajPorukuAES(const vector<unsigned char>& poruka, vect
     {
         ArraySource(poruka.data(), poruka.size(), true, new StreamTransformationFilter(dekriptor, new Redirector(dekriptSink)));
         dekriptirano.resize(dekriptSink.TotalPutLength());
-
-
-        int brojac=0;
-        for(vector<unsigned char>::const_iterator it=dekriptirano.begin(); brojac<80; ++it, brojac++)
-            cout << (int)(*it) << " ";
-        cout << endl;
-
-
-        if(poruka.size()>512)
+        if(dekriptirano.size()>512)
             sprintf(ispis, "%s...\n",IspisiBinarnePodatke(dekriptirano.data(),512).data());
         else
-            sprintf(ispis, "%s\n",IspisiBinarnePodatke(dekriptirano.data(),512).data());
+            sprintf(ispis, "%s\n",IspisiBinarnePodatke(dekriptirano.data(),dekriptirano.size()).data());
         upis.sadrzajAES.assign(ispis);
         swprintf(ispisw,L"Poruka - dekriptirani sadržaj");
         upis.sadrzajAES.assign(ispis);
@@ -163,8 +155,46 @@ bool GlavniStroj::DekriptirajPorukuAES(const vector<unsigned char>& poruka, vect
         projektApp->UpisiPoruku(upis);
         return false;
     }
+}
 
+bool GlavniStroj::EnkriptirajPorukuRSA(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& enkriptirano)
+{
+    PorukaPodaci upis;
+    Integer kriptiranoBroj;
+    RSA::PublicKey javniKljuc(privatniKljuc);
+    if(poruka.size()>(javniKljuc.GetModulus().BitCount()>>3))
+        return false;
+    Integer porukaBroj((const byte *)poruka.data(), poruka.size());
+    kriptiranoBroj=javniKljuc.ApplyFunction(porukaBroj);
+    size_t velicina = kriptiranoBroj.MinEncodedSize();
 
+    enkriptirano.resize(velicina);
+    kriptiranoBroj.Encode(&enkriptirano[0],enkriptirano.size());
+
+    sprintf(ispis, "%s\n",IspisiBinarnePodatke(enkriptirano.data(),velicina).data());
+    swprintf(ispisw,L"Poruka - enkriptirani sadržaj");
+    upis.sadrzajRSA.assign(ispis);
+    upis.oznakaRSA.assign(ispisw);
+    projektApp->UpisiPoruku(upis);
+    return true;
+}
+bool GlavniStroj::DekriptirajPorukuRSA(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& dekriptirano)
+{
+    PorukaPodaci upis;
+    Integer dekriptiranoBroj;
+    AutoSeededRandomPool prng;
+    Integer porukaBroj((const byte *)poruka.data(), poruka.size());
+    dekriptiranoBroj=privatniKljuc.CalculateInverse(prng,porukaBroj);
+    size_t velicina=dekriptiranoBroj.MinEncodedSize();
+    dekriptirano.resize(velicina);
+    dekriptiranoBroj.Encode(&dekriptirano[0],dekriptirano.size());
+
+    sprintf(ispis, "%s\n",IspisiBinarnePodatke(dekriptirano.data(),velicina).data());
+    swprintf(ispisw,L"Poruka - dekriptirani sadržaj");
+    upis.sadrzajRSA.assign(ispis);
+    upis.oznakaRSA.assign(ispisw);
+    projektApp->UpisiPoruku(upis);
+    return true;
 }
 
 string GlavniStroj::IspisiBinarnePodatke(byte *podaci, int velicina)

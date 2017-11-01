@@ -57,16 +57,28 @@ void ProjektApp::GenerirajRSAKljuceve(VelicinaRSAKljuca& velicina, GrafickiPodac
 
 bool ProjektApp::EnkriptirajPorukuAES(const std::vector<unsigned char>& poruka)
 {
-    return glavniStroj->EnkriptirajPorukuAES(poruka, medjuspremnikPoruke);
+    return glavniStroj->EnkriptirajPorukuAES(poruka, medjuspremnikPorukeAES);
 }
-
 bool ProjektApp::DekriptirajPorukuAES(const std::vector<unsigned char>& poruka)
 {
-    return glavniStroj->DekriptirajPorukuAES(poruka, medjuspremnikPoruke);
+    return glavniStroj->DekriptirajPorukuAES(poruka, medjuspremnikPorukeAES);
 }
-void ProjektApp::DohvatiMedjuspremnikPoruke(std::vector<unsigned char>& poruka)
+bool ProjektApp::EnkriptirajPorukuRSA(const std::vector<unsigned char>& poruka)
 {
-    poruka=medjuspremnikPoruke;
+    return glavniStroj->EnkriptirajPorukuRSA(poruka, medjuspremnikPorukeRSA);
+}
+bool ProjektApp::DekriptirajPorukuRSA(const std::vector<unsigned char>& poruka)
+{
+    return glavniStroj->DekriptirajPorukuRSA(poruka, medjuspremnikPorukeRSA);
+}
+
+void ProjektApp::DohvatiMedjuspremnikPorukeAES(std::vector<unsigned char>& poruka)
+{
+    poruka=medjuspremnikPorukeAES;
+}
+void ProjektApp::DohvatiMedjuspremnikPorukeRSA(std::vector<unsigned char>& poruka)
+{
+    poruka=medjuspremnikPorukeRSA;
 }
 
 void ProjektApp::KreirajSazetakAES(const std::vector<unsigned char>& poruka)
@@ -114,6 +126,8 @@ void ProjektApp::UpisiPoruku(PorukaPodaci& porukaPodaci)
     dogadjajUpis->SetEventObject( (wxObject *)this );
     this->porukaPodaci->oznakaAES = porukaPodaci.oznakaAES;
     this->porukaPodaci->sadrzajAES = porukaPodaci.sadrzajAES;
+    this->porukaPodaci->oznakaRSA = porukaPodaci.oznakaRSA;
+    this->porukaPodaci->sadrzajRSA = porukaPodaci.sadrzajRSA;
     dogadjajUpis->SetClientData((void *)(this->porukaPodaci));
     wxQueueEvent( wxGlavnaFormaDest, dogadjajUpis );
 }

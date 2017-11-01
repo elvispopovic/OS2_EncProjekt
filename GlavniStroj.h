@@ -17,6 +17,8 @@ class GlavniStroj : public wxFrame
         virtual void KreirajSazetakRSA(const std::vector<unsigned char>& poruka);
         virtual bool EnkriptirajPorukuAES(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& enkriptirano);
         virtual bool DekriptirajPorukuAES(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& dekriptirano);
+        virtual bool EnkriptirajPorukuRSA(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& enkriptirano);
+        virtual bool DekriptirajPorukuRSA(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& dekriptirano);
 
     protected:
         IProjektApp *projektApp;
