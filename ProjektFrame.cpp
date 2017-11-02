@@ -69,7 +69,10 @@ ProjektFrame::ProjektFrame(wxFrame *frame, ProjektApp *app)
 
     biljeznica->SetPageText(0,wxT("Simetrično kriptiranje"));
     biljeznica->SetPageText(1,wxT("Asimetrično kriptiranje"));
+    biljeznica->SetPageText(2,wxT("Digitalno potpisivanje"));
+    //biljeznica->GetPage(2)->Hide();
     biljeznica->SetSelection(0);
+    Refresh();
 }
 
 ProjektFrame::~ProjektFrame()
@@ -91,6 +94,7 @@ void ProjektFrame::UcitajPoruku( wxCommandEvent& event )
     {
         case 0: this->UcitajPorukuAES(event); break;
         case 1: this->UcitajPorukuRSA(event); break;
+        case 2: this->UcitajPorukuAES(event); break;
     }
 }
 
@@ -124,13 +128,17 @@ void ProjektFrame::UcitajPorukuAES( wxCommandEvent& event )
         txtPoruka->AppendText(tekst.ReadLine()+"\n");
         */
 
+    porukaSadrzajAES.clear();
     std::ifstream citanje_datoteke( openFileDialog.GetPath().ToAscii(), std::ios::binary );
     porukaSadrzajAES.assign((std::istreambuf_iterator<char>(citanje_datoteke)), (std::istreambuf_iterator<char>()));
+    porukaPotpisivanje.clear();
+    //porukaPotpisivanje.reserve(porukaSadrzajAES.size());
+    porukaPotpisivanje.insert(porukaPotpisivanje.end(),porukaSadrzajAES.begin(),porukaSadrzajAES.end());
 
     std::vector<unsigned char>::iterator it;
     for(brojac = 0, it = porukaSadrzajAES.begin(); it!=porukaSadrzajAES.end(); ++it, ++brojac)
         if(brojac++<1024)
-            upis.append(wxString::Format("%02X",(int)(*it)));
+            upis.append(wxString::Format("%02X ",(int)(*it)));
         else
         {
             upis.append(wxString("..."));
@@ -139,6 +147,8 @@ void ProjektFrame::UcitajPorukuAES( wxCommandEvent& event )
     upis.append(wxString::Format(L"\n"));
     txtAESPoruka->Clear();
     txtAESPoruka->AppendText(upis);
+    txtAESPorukaPotpis->Clear();
+    txtAESPorukaPotpis->AppendText(upis);
 
     okvirPorukeAES->GetStaticBox()->SetLabel(L"Poruka - učitana datoteka");
     aplikacija->KreirajSazetakAES(porukaSadrzajAES);
@@ -164,7 +174,7 @@ void ProjektFrame::UcitajPorukuRSA( wxCommandEvent& event )
     std::vector<unsigned char>::iterator it;
     for(brojac = 0, it = porukaSadrzajRSA.begin(); it!=porukaSadrzajRSA.end(); ++it, ++brojac)
         if(brojac++<1024)
-            upis.append(wxString::Format("%02X",(int)(*it)));
+            upis.append(wxString::Format("%02X ",(int)(*it)));
         else
         {
             upis.append(wxString("..."));
@@ -260,6 +270,18 @@ void ProjektFrame::GenerirajRSA( wxCommandEvent& event )
     tbRSAJavniKljuc->SetValue(podaci.javniKljuc);
 }
 
+void ProjektFrame::PotpisiPoruku( wxCommandEvent& event )
+{
+    if(!(porukaPotpisivanje.empty())&&(aplikacija!=nullptr))
+        if(!(aplikacija->PotpisiPoruku(porukaPotpisivanje, potpis)))
+            wxMessageBox(wxT("Nije generiran par ključeva.\nPoruka se ne može potpisati. Kreirajte ključeve u odjeljku asimetrične kriptografije."),"Upozorenje!");
+}
+void ProjektFrame::Verificiraj( wxCommandEvent& event )
+{
+    if(!(porukaPotpisivanje.empty())&&(aplikacija!=nullptr))
+        aplikacija->VerificirajPoruku(porukaPotpisivanje, potpis);
+}
+
 void ProjektFrame::OsvjeziPodatke(wxCommandEvent &event)
 {
     GrafickiPodaci *podaci;
@@ -291,6 +313,19 @@ void ProjektFrame::IspisiPoruku(wxCommandEvent &event)
 
     if(podaci->oznakaRSA.size()>0)
         okvirPorukeRSA->GetStaticBox()->SetLabel(podaci->oznakaRSA.c_str());
+
+    if(podaci->potpisAES.size()>0)
+    {
+        txtAESPorukaPotpis1->Clear();
+        txtAESPorukaPotpis1->AppendText(podaci->potpisAES.c_str());
+    }
+
+    switch(podaci->verificirano)
+    {
+        case 1: lblVerificirano->SetLabel("Potpis je u redu."); break;
+        case -1: lblVerificirano->SetLabel("Potpis nije ispravan."); break;
+        default: lblVerificirano->SetLabel("");
+    }
 }
 
 /****************************************************************************************/

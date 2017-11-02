@@ -20,9 +20,9 @@
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/statusbr.h>
-#include <wx/sizer.h>
 #include <wx/textctrl.h>
 #include <wx/button.h>
+#include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/scrolwin.h>
 #include <wx/stattext.h>
@@ -74,6 +74,12 @@ class GUIFrame : public wxFrame
 		wxButton* btnUcitajPorukuRSA;
 		wxButton* btnKriptirajPorukuRSA;
 		wxTextCtrl* tbSazetakRSA;
+		wxScrolledWindow* m_scrolledWindow3;
+		wxTextCtrl* txtAESPorukaPotpis;
+		wxButton* btnPotpisi;
+		wxButton* btnVerificiraj;
+		wxTextCtrl* txtAESPorukaPotpis1;
+		wxStaticText* lblVerificirano;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
@@ -86,6 +92,8 @@ class GUIFrame : public wxFrame
 		virtual void GenerirajRSA( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UcitajPorukuRSA( wxCommandEvent& event ) { event.Skip(); }
 		virtual void KriptirajPorukuRSA( wxCommandEvent& event ) { event.Skip(); }
+		virtual void PotpisiPoruku( wxCommandEvent& event ) { event.Skip(); }
+		virtual void Verificiraj( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

@@ -26,6 +26,7 @@ class ProjektFrame : public GUIFrame
     private:
         ProjektApp *aplikacija;
         std::vector<unsigned char> porukaSadrzajAES, porukaSadrzajRSA;
+        std::vector<unsigned char> porukaPotpisivanje, potpis;
         virtual void OnClose(wxCloseEvent& event);
         virtual void UcitajPorukuAES( wxCommandEvent& event );
         virtual void UcitajPorukuRSA( wxCommandEvent& event );
@@ -33,6 +34,9 @@ class ProjektFrame : public GUIFrame
         virtual void KriptirajPorukuAES( wxCommandEvent& event );
         virtual void KriptirajPorukuRSA( wxCommandEvent& event );
         virtual void GenerirajRSA( wxCommandEvent& event );
+        virtual void PotpisiPoruku( wxCommandEvent& event );
+        virtual void Verificiraj( wxCommandEvent& event );
+
         virtual void OnQuit(wxCommandEvent& event);
         virtual void OnAbout(wxCommandEvent& event);
         virtual void OsvjeziPodatke(wxCommandEvent &event);

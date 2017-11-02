@@ -15,6 +15,8 @@ class GlavniStroj : public wxFrame
         virtual void ZahtijevajAzuriranjeGrafickihPodataka();
         virtual void KreirajSazetakAES(const std::vector<unsigned char>& poruka);
         virtual void KreirajSazetakRSA(const std::vector<unsigned char>& poruka);
+        virtual bool PotpisiPoruku(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& potpis);
+        virtual bool VerificirajPoruku(const std::vector<unsigned char>& poruka, const std::vector<unsigned char>& potpis);
         virtual bool EnkriptirajPorukuAES(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& enkriptirano);
         virtual bool DekriptirajPorukuAES(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& dekriptirano);
         virtual bool EnkriptirajPorukuRSA(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& enkriptirano);
@@ -22,14 +24,18 @@ class GlavniStroj : public wxFrame
 
     protected:
         IProjektApp *projektApp;
+        CryptoPP::AutoSeededRandomPool prng;
         CryptoPP::SecByteBlock aesKljuc, iv;
         CryptoPP::RSA::PrivateKey privatniKljuc;
+
 
     private:
         char *ispis;
         wchar_t *ispisw;
         GrafickiPodaci podaci;
         std::string IspisiBinarnePodatke(byte *podaci, int velicina);
+
+        void Test();
 
 };
 

@@ -71,6 +71,17 @@ bool ProjektApp::DekriptirajPorukuRSA(const std::vector<unsigned char>& poruka)
 {
     return glavniStroj->DekriptirajPorukuRSA(poruka, medjuspremnikPorukeRSA);
 }
+bool ProjektApp::PotpisiPoruku(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& potpis)
+{
+    bool rezultat = glavniStroj->PotpisiPoruku(poruka, potpis);
+    if(!rezultat) return false;
+    return true;
+}
+bool ProjektApp::VerificirajPoruku(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& potpis)
+{
+    return glavniStroj->VerificirajPoruku(poruka, potpis);
+}
+
 
 void ProjektApp::DohvatiMedjuspremnikPorukeAES(std::vector<unsigned char>& poruka)
 {
@@ -128,6 +139,8 @@ void ProjektApp::UpisiPoruku(PorukaPodaci& porukaPodaci)
     this->porukaPodaci->sadrzajAES = porukaPodaci.sadrzajAES;
     this->porukaPodaci->oznakaRSA = porukaPodaci.oznakaRSA;
     this->porukaPodaci->sadrzajRSA = porukaPodaci.sadrzajRSA;
+    this->porukaPodaci->potpisAES = porukaPodaci.potpisAES;
+    this->porukaPodaci->verificirano=porukaPodaci.verificirano;
     dogadjajUpis->SetClientData((void *)(this->porukaPodaci));
     wxQueueEvent( wxGlavnaFormaDest, dogadjajUpis );
 }

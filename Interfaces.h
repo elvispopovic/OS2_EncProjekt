@@ -11,6 +11,9 @@
 #include <hkdf.h>
 #include <pwdbased.h>
 #include <rsa.h>
+#include <sha.h>
+#include <pssr.h>
+#include <whrlpool.h>
 #include <files.h>
 
 enum VelicinaAESKljuca:unsigned char{AES_mali=16, AES_srednji=24, AES_veliki=32};
@@ -28,6 +31,8 @@ struct PorukaPodaci
 {
     std::wstring oznakaAES, oznakaRSA;
     std::string sadrzajAES, sadrzajRSA;
+    std::string potpisAES;
+    char verificirano=0;
 };
 
 class IProjektApp
