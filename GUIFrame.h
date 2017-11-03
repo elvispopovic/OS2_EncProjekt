@@ -67,8 +67,11 @@ class GUIFrame : public wxFrame
 		wxStaticLine* m_staticline3;
 		wxStaticText* m_staticText41;
 		wxTextCtrl* tbRSAJavniKljuc;
-		wxButton* btnGeneriraj;
 		wxRadioBox* radioVelicinaRSAKljuca;
+		wxButton* btnGenerirajRSAKljuc;
+		wxStaticLine* m_staticline4;
+		wxButton* btnSnimiRSAKljuc;
+		wxButton* btnUcitajRSAKljuc;
 		wxStaticBoxSizer* okvirPorukeRSA;
 		wxTextCtrl* txtRSAPoruka;
 		wxButton* btnUcitajPorukuRSA;
@@ -86,10 +89,12 @@ class GUIFrame : public wxFrame
 		virtual void OnQuit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UcitajPoruku( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AESDijalog( wxCommandEvent& event ) { event.Skip(); }
+		virtual void GenerirajRSA( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UcitajPorukuAES( wxCommandEvent& event ) { event.Skip(); }
 		virtual void KriptirajPorukuAES( wxCommandEvent& event ) { event.Skip(); }
-		virtual void GenerirajRSA( wxCommandEvent& event ) { event.Skip(); }
+		virtual void snimiRSAKljuceve( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ucitajRSAKljuceve( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UcitajPorukuRSA( wxCommandEvent& event ) { event.Skip(); }
 		virtual void KriptirajPorukuRSA( wxCommandEvent& event ) { event.Skip(); }
 		virtual void PotpisiPoruku( wxCommandEvent& event ) { event.Skip(); }

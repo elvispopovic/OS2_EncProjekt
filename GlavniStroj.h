@@ -12,6 +12,7 @@ class GlavniStroj : public wxFrame
         virtual bool GenerirajAESKljuc(const std::string& lozinka, VelicinaAESKljuca& velicina, int brojIteracija, bool koristiSol, GrafickiPodaci& povratniPodaci);
         virtual bool GenerirajRSAKljuceve(VelicinaRSAKljuca& velicina, GrafickiPodaci& povratniPodaci);
         virtual bool SnimiRSAKljuceve(const std::string privatniDatoteka, const std::string javniDatoteka);
+        virtual bool UcitajRSAKljuceve(const std::string privatniDatoteka, const std::string javniDatoteka);
         virtual bool UpisiAktivneKljuceve(std::string& aesKljuc, std::string& iv);
         virtual void ZahtijevajAzuriranjeGrafickihPodataka();
         virtual void KreirajSazetakAES(const std::vector<unsigned char>& poruka);

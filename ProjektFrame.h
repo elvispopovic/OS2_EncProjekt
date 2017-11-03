@@ -34,6 +34,8 @@ class ProjektFrame : public GUIFrame
         virtual void KriptirajPorukuAES( wxCommandEvent& event );
         virtual void KriptirajPorukuRSA( wxCommandEvent& event );
         virtual void GenerirajRSA( wxCommandEvent& event );
+        virtual void snimiRSAKljuceve( wxCommandEvent& event );
+        virtual void ucitajRSAKljuceve( wxCommandEvent& event );
         virtual void PotpisiPoruku( wxCommandEvent& event );
         virtual void Verificiraj( wxCommandEvent& event );
 

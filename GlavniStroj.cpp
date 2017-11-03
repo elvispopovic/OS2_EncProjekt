@@ -55,10 +55,7 @@ bool GlavniStroj::GenerirajRSAKljuceve(VelicinaRSAKljuca& velicina, GrafickiPoda
 
     privatniKljuc.Save(HexEncoder(new StringSink(povratniPodaci.privatniKljuc),true,2," ").Ref());
     javniKljuc.Save(HexEncoder(new StringSink(povratniPodaci.javniKljuc),true, 2, " ").Ref());
-
-
-    //test
-    SnimiRSAKljuceve(string("privatni_kljuc.txt"), string("javni_kljuc.txt"));
+    return true;
 }
 
 bool GlavniStroj::SnimiRSAKljuceve(const string privatniDatoteka, const string javniDatoteka)
@@ -66,16 +63,32 @@ bool GlavniStroj::SnimiRSAKljuceve(const string privatniDatoteka, const string j
     ByteQueue red1, red2;
     AutoSeededRandomPool rsaRng;
     RSA::PublicKey javniKljuc(privatniKljuc);
-    FileSink privDatSink(privatniDatoteka.c_str()), javDatSink(javniDatoteka.c_str());
+
+    string nazivDERprivatni=privatniDatoteka+"DER.key";
+    string nazivDERjavni=javniDatoteka+"DER.key";
+
+    FileSink privDatSinkDER(nazivDERprivatni.c_str()), javDatSinkDER(nazivDERjavni.c_str());
     if(!privatniKljuc.Validate(rsaRng,3))
         return false;
     privatniKljuc.DEREncodePrivateKey(red1);
     javniKljuc.DEREncodePublicKey(red2);
-    red1.CopyTo(privDatSink);
-    privDatSink.MessageEnd();
-    red2.CopyTo(javDatSink);
-    javDatSink.MessageEnd();
+    red1.CopyTo(privDatSinkDER);
+    privDatSinkDER.MessageEnd();
+    red2.CopyTo(javDatSinkDER);
+    javDatSinkDER.MessageEnd();
 
+    string privKljucStr, javKljucStr;
+    nazivDERprivatni=privatniDatoteka+".txt";
+    nazivDERjavni=javniDatoteka+".txt";
+    FileSink privDatSink(nazivDERprivatni.c_str()), javDatSink(nazivDERjavni.c_str());
+    privatniKljuc.Save(HexEncoder(&privDatSink).Ref());
+    javniKljuc.Save(HexEncoder(&javDatSink).Ref());
+    return true;
+}
+bool GlavniStroj::UcitajRSAKljuceve(const std::string privatniDatoteka, const std::string javniDatoteka)
+{
+
+    return true;
 }
 
 bool GlavniStroj::UpisiAktivneKljuceve(string& aesKljuc, string& iv)

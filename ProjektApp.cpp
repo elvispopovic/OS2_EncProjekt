@@ -54,6 +54,14 @@ void ProjektApp::GenerirajRSAKljuceve(VelicinaRSAKljuca& velicina, GrafickiPodac
 {
     glavniStroj->GenerirajRSAKljuceve(velicina, povratniPodaci);
 }
+void ProjektApp::SnimiRSAKljuceve()
+{
+    glavniStroj->SnimiRSAKljuceve("privatni_kljuc","javni_kljuc");
+}
+void ProjektApp::UcitajRSAKljuceve()
+{
+    glavniStroj->UcitajRSAKljuceve("privatni_kljuc","javni_kljuc");
+}
 
 bool ProjektApp::EnkriptirajPorukuAES(const std::vector<unsigned char>& poruka)
 {

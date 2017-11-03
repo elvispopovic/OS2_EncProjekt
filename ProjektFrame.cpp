@@ -258,6 +258,8 @@ void ProjektFrame::GenerirajRSA( wxCommandEvent& event )
 {
     VelicinaRSAKljuca velicinaRSA;
     GrafickiPodaci podaci;
+    if(biljeznica->GetSelection()!=1)
+        biljeznica->SetSelection(1);
     switch(radioVelicinaRSAKljuca->GetSelection())
     {
         case 0: velicinaRSA=VelicinaRSAKljuca::RSA_mali; break;
@@ -268,6 +270,19 @@ void ProjektFrame::GenerirajRSA( wxCommandEvent& event )
     aplikacija->GenerirajRSAKljuceve(velicinaRSA, podaci);
     tbRSAPrivatniKljuc->SetValue(podaci.privatniKljuc);
     tbRSAJavniKljuc->SetValue(podaci.javniKljuc);
+    btnSnimiRSAKljuc->Enable();
+}
+void ProjektFrame::snimiRSAKljuceve( wxCommandEvent& event )
+{
+    const int rezultat = MessageBox(NULL, L"Datoteke ključeva bit će prepisane i stari ključevi\nzamijenjeni novima. Želite li nastaviti?",
+                                    L"Snimanje para ključeva u datoteku",  MB_YESNO | MB_ICONQUESTION);
+    if(rezultat==IDNO)
+        return;
+    aplikacija->SnimiRSAKljuceve();
+}
+void ProjektFrame::ucitajRSAKljuceve( wxCommandEvent& event )
+{
+    aplikacija->UcitajRSAKljuceve();
 }
 
 void ProjektFrame::PotpisiPoruku( wxCommandEvent& event )
