@@ -118,7 +118,7 @@ void ProjektApp::AzurirajGrafickePodatke(const GrafickiPodaci& podaci)
     wxQueueEvent( wxGlavnaFormaDest, commandEvent );
 }
 
-void ProjektApp::UpisiAktivneKljuceve(CryptoPP::SecByteBlock& aesKljuc, CryptoPP::SecByteBlock& iv)
+void ProjektApp::UpisiAktivneKljuceve(std::string& aesKljuc, std::string& iv)
 {
     glavniStroj->UpisiAktivneKljuceve(aesKljuc, iv);
 }

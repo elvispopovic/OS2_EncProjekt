@@ -19,27 +19,28 @@ GlavniStroj::~GlavniStroj()
 
 bool GlavniStroj::GenerirajAESKljuc(const string& lozinka, VelicinaAESKljuca& velicina, int brojIteracija, bool koristiSol, GrafickiPodaci& povratniPodaci)
 {
+    SecByteBlock sbAesKljuc, sbIv, sbSol;
     AutoSeededX917RNG<CryptoPP::AES> aesRng;
     PKCS5_PBKDF2_HMAC<SHA256> pbkdf;
-    povratniPodaci.sbSol.New(velicina);
-    povratniPodaci.sbIv.New(AES::BLOCKSIZE);
-    povratniPodaci.sbAesKljuc.New(velicina);
-    aesRng.GenerateBlock(povratniPodaci.sbSol,velicina);
-    aesRng.GenerateBlock(povratniPodaci.sbIv,AES::BLOCKSIZE);
+    sbSol.New(velicina);
+    sbIv.New(AES::BLOCKSIZE);
+    sbAesKljuc.New(velicina);
+    aesRng.GenerateBlock(sbSol,velicina);
+    aesRng.GenerateBlock(sbIv,AES::BLOCKSIZE);
     if(lozinka.size()>0)
     {
         if(koristiSol)
-            pbkdf.DeriveKey(povratniPodaci.sbAesKljuc,velicina,0x00,(byte*)(lozinka.data()),lozinka.size(),povratniPodaci.sbSol, povratniPodaci.sbSol.size(),brojIteracija);
+            pbkdf.DeriveKey(sbAesKljuc,velicina,0x00,(byte*)(lozinka.data()),lozinka.size(),sbSol, sbSol.size(),brojIteracija);
         else
-            pbkdf.DeriveKey(povratniPodaci.sbAesKljuc,velicina,0x00,(byte*)(lozinka.data()),lozinka.size(),nullptr, 0,brojIteracija);
+            pbkdf.DeriveKey(sbAesKljuc,velicina,0x00,(byte*)(lozinka.data()),lozinka.size(),nullptr, 0,brojIteracija);
     }
     else
-        aesRng.GenerateBlock(povratniPodaci.sbAesKljuc,velicina);
+        aesRng.GenerateBlock(sbAesKljuc,velicina);
 
-    povratniPodaci.aesKljuc.assign(IspisiBinarnePodatke(povratniPodaci.sbAesKljuc.data(),povratniPodaci.sbAesKljuc.size()));
-    povratniPodaci.iv.assign(IspisiBinarnePodatke(povratniPodaci.sbIv.data(),povratniPodaci.sbIv.size()));
+    povratniPodaci.aesKljuc.assign(IspisiBinarnePodatke(sbAesKljuc.data(),sbAesKljuc.size()));
+    povratniPodaci.iv.assign(IspisiBinarnePodatke(sbIv.data(),sbIv.size()));
     if(koristiSol)
-        povratniPodaci.sol.assign(IspisiBinarnePodatke(povratniPodaci.sbSol.data(),povratniPodaci.sbSol.size()));
+        povratniPodaci.sol.assign(IspisiBinarnePodatke(sbSol.data(),sbSol.size()));
     else
         povratniPodaci.sol.assign(string(" ---"));
 
@@ -54,12 +55,40 @@ bool GlavniStroj::GenerirajRSAKljuceve(VelicinaRSAKljuca& velicina, GrafickiPoda
 
     privatniKljuc.Save(HexEncoder(new StringSink(povratniPodaci.privatniKljuc),true,2," ").Ref());
     javniKljuc.Save(HexEncoder(new StringSink(povratniPodaci.javniKljuc),true, 2, " ").Ref());
+
+
+    //test
+    SnimiRSAKljuceve(string("privatni_kljuc.txt"), string("javni_kljuc.txt"));
 }
 
-bool GlavniStroj::UpisiAktivneKljuceve(CryptoPP::SecByteBlock& aesKljuc, CryptoPP::SecByteBlock& iv)
+bool GlavniStroj::SnimiRSAKljuceve(const string privatniDatoteka, const string javniDatoteka)
 {
-    this->aesKljuc=aesKljuc;
-    this->iv=iv;
+    ByteQueue red1, red2;
+    AutoSeededRandomPool rsaRng;
+    RSA::PublicKey javniKljuc(privatniKljuc);
+    FileSink privDatSink(privatniDatoteka.c_str()), javDatSink(javniDatoteka.c_str());
+    if(!privatniKljuc.Validate(rsaRng,3))
+        return false;
+    privatniKljuc.DEREncodePrivateKey(red1);
+    javniKljuc.DEREncodePublicKey(red2);
+    red1.CopyTo(privDatSink);
+    privDatSink.MessageEnd();
+    red2.CopyTo(javDatSink);
+    javDatSink.MessageEnd();
+
+}
+
+bool GlavniStroj::UpisiAktivneKljuceve(string& aesKljuc, string& iv)
+{
+    this->aesKljuc.resize(AES::MAX_KEYLENGTH);
+    ArraySink as1(this->aesKljuc.BytePtr(), this->aesKljuc.size());
+    StringSource ss1(aesKljuc, true, new HexDecoder(&as1));
+    this->aesKljuc.resize(as1.TotalPutLength());
+
+    this->iv.resize(AES::BLOCKSIZE);
+    ArraySink as2(this->iv.BytePtr(), this->iv.size());
+    StringSource ss2(iv,true, new HexDecoder(&as2));
+
 }
 
 void GlavniStroj::ZahtijevajAzuriranjeGrafickihPodataka()
@@ -71,7 +100,7 @@ void GlavniStroj::ZahtijevajAzuriranjeGrafickihPodataka()
 
 void GlavniStroj::KreirajSazetakAES(const vector<unsigned char>& poruka)
 {
-    SHA224 sha;
+    SHA256 sha;
     podaci.sazetakAES.clear();
     StringSink sazetakSink(podaci.sazetakAES);
     ArraySource(poruka.data(), poruka.size(), true, new HashFilter(sha, new HexEncoder(new Redirector(sazetakSink),true,2," ")));
@@ -79,7 +108,7 @@ void GlavniStroj::KreirajSazetakAES(const vector<unsigned char>& poruka)
 }
 void GlavniStroj::KreirajSazetakRSA(const vector<unsigned char>& poruka)
 {
-    SHA224 sha;
+    SHA256 sha;
     podaci.sazetakRSA.clear();
     StringSink sazetakSink(podaci.sazetakRSA);
     ArraySource(poruka.data(), poruka.size(), true, new HashFilter(sha, new HexEncoder(new Redirector(sazetakSink),true,2," ")));
@@ -212,7 +241,7 @@ bool GlavniStroj::PotpisiPoruku(const vector<unsigned char>& poruka, vector<unsi
     PorukaPodaci upis;
 
     AutoSeededRandomPool rng;
-    if(privatniKljuc.GetModulus()==0)
+    if(!privatniKljuc.GetModulus()==0)
         return false;
 
     upis.potpisAES.clear();

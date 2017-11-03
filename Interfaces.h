@@ -48,7 +48,7 @@ class IProjektApp
     virtual void DohvatiMedjuspremnikPorukeAES(std::vector<unsigned char>& poruka)=0;
     virtual void DohvatiMedjuspremnikPorukeRSA(std::vector<unsigned char>& poruka)=0;
     virtual void AzurirajGrafickePodatke(const GrafickiPodaci& podaci)=0;
-    virtual void UpisiAktivneKljuceve(CryptoPP::SecByteBlock& aesKljuc, CryptoPP::SecByteBlock& iv)=0;
+    virtual void UpisiAktivneKljuceve(std::string& aesKljuc, std::string& iv)=0;
     virtual void ZahtijevajAzuriranjeGrafickihPodataka()=0;
     virtual void UpisiPoruku(PorukaPodaci& porukaPodaci)=0;
 };

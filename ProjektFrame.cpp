@@ -366,7 +366,7 @@ void DijalogAES::odustani( wxCommandEvent& event )
 
 void DijalogAES::potvrdi( wxCommandEvent& event )
 {
-    aplikacija->UpisiAktivneKljuceve(podaci.sbAesKljuc, podaci.sbIv);
+    aplikacija->UpisiAktivneKljuceve(podaci.aesKljuc, podaci.iv);
     aplikacija->ZahtijevajAzuriranjeGrafickihPodataka();
     Destroy();
 }
