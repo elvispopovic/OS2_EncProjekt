@@ -22,6 +22,7 @@ enum VelicinaRSAKljuca:unsigned short{RSA_mali=128, RSA_srednji=256, RSA_veliki=
 struct GrafickiPodaci
 {
     std::string aesKljuc, sol, iv;
+    VelicinaAESKljuca velicinaAES;
     std::string privatniKljuc, javniKljuc;
     std::string sazetakAES, sazetakRSA;
     CryptoPP::SecByteBlock sbAesKljuc, sbIv, sbSol;
@@ -48,7 +49,7 @@ class IProjektApp
     virtual void DohvatiMedjuspremnikPorukeAES(std::vector<unsigned char>& poruka)=0;
     virtual void DohvatiMedjuspremnikPorukeRSA(std::vector<unsigned char>& poruka)=0;
     virtual void AzurirajGrafickePodatke(const GrafickiPodaci& podaci)=0;
-    virtual void UpisiAktivneKljuceve(std::string& aesKljuc, std::string& iv)=0;
+    virtual void UpisiAktivneKljuceve(const std::string& aesKljuc, const std::string& iv, VelicinaAESKljuca velicinaKljuca)=0;
     virtual void ZahtijevajAzuriranjeGrafickihPodataka()=0;
     virtual void UpisiPoruku(PorukaPodaci& porukaPodaci)=0;
 };

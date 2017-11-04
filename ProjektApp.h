@@ -20,7 +20,9 @@ class ProjektApp : public wxApp, IProjektApp
     public:
         virtual bool OnInit();
         virtual int  OnExit();
-        virtual void GenerirajAESKljuc(IDijalogAES *dijalog, const std::string& lozinka, VelicinaAESKljuca velicina, bool koristiSol, GrafickiPodaci& povratniPodaci);
+        virtual void GenerirajAESKljuc(IDijalogAES *dijalog, const std::string& lozinka, bool koristiSol, GrafickiPodaci& povratniPodaci);
+        virtual void SnimiAESKljuc();
+        virtual bool UcitajAESKljuc();
         virtual void GenerirajRSAKljuceve(VelicinaRSAKljuca& velicina, GrafickiPodaci& povratniPodaci);
         virtual void SnimiRSAKljuceve();
         virtual bool UcitajRSAKljuceve(GrafickiPodaci& povratniPodaci);
@@ -36,7 +38,7 @@ class ProjektApp : public wxApp, IProjektApp
         virtual void DohvatiMedjuspremnikPorukeAES(std::vector<unsigned char>& poruka);
         virtual void DohvatiMedjuspremnikPorukeRSA(std::vector<unsigned char>& poruka);
         virtual void AzurirajGrafickePodatke(const GrafickiPodaci& podaci);
-        virtual void UpisiAktivneKljuceve(std::string& aesKljuc, std::string& iv);
+        virtual void UpisiAktivneKljuceve(const std::string& aesKljuc, const std::string& iv, VelicinaAESKljuca velicinaKljuca);
         virtual void ZahtijevajAzuriranjeGrafickihPodataka();
         virtual void UpisiPoruku(PorukaPodaci& porukaPodaci);
     protected:

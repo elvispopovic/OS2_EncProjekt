@@ -82,8 +82,25 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	bSizer22->Add( tbAESKljuc, 0, wxBOTTOM|wxEXPAND|wxLEFT|wxRIGHT, 5 );
 	
+	wxBoxSizer* bSizer19;
+	bSizer19 = new wxBoxSizer( wxHORIZONTAL );
+	
 	btnAESDijalog = new wxButton( sbSizer10->GetStaticBox(), wxID_ANY, wxT("Generiraj"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer22->Add( btnAESDijalog, 0, wxALL, 5 );
+	bSizer19->Add( btnAESDijalog, 0, wxALL, 5 );
+	
+	m_staticline5 = new wxStaticLine( sbSizer10->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL );
+	bSizer19->Add( m_staticline5, 0, wxEXPAND | wxALL, 5 );
+	
+	btnSnimiAESKljuc = new wxButton( sbSizer10->GetStaticBox(), wxID_ANY, wxT("Snimi"), wxDefaultPosition, wxDefaultSize, 0 );
+	btnSnimiAESKljuc->Enable( false );
+	
+	bSizer19->Add( btnSnimiAESKljuc, 0, wxLEFT|wxTOP, 5 );
+	
+	btnUcitajAESKljuc = new wxButton( sbSizer10->GetStaticBox(), wxID_ANY, wxT("Učitaj"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer19->Add( btnUcitajAESKljuc, 0, wxALL, 5 );
+	
+	
+	bSizer22->Add( bSizer19, 1, wxEXPAND, 5 );
 	
 	
 	sbSizer10->Add( bSizer22, 1, wxEXPAND, 5 );
@@ -160,7 +177,7 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_scrolledWindow1->SetSizer( bSizer11 );
 	m_scrolledWindow1->Layout();
 	bSizer11->Fit( m_scrolledWindow1 );
-	biljeznica->AddPage( m_scrolledWindow1, wxT("a page"), false, wxNullBitmap );
+	biljeznica->AddPage( m_scrolledWindow1, wxT("a page"), true, wxNullBitmap );
 	m_scrolledWindow2 = new wxScrolledWindow( biljeznica, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
 	m_scrolledWindow2->SetScrollRate( 5, 5 );
 	m_scrolledWindow2->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNTEXT ) );
@@ -282,7 +299,7 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_scrolledWindow2->SetSizer( bSizer16 );
 	m_scrolledWindow2->Layout();
 	bSizer16->Fit( m_scrolledWindow2 );
-	biljeznica->AddPage( m_scrolledWindow2, wxT("a page"), true, wxNullBitmap );
+	biljeznica->AddPage( m_scrolledWindow2, wxT("a page"), false, wxNullBitmap );
 	m_scrolledWindow3 = new wxScrolledWindow( biljeznica, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
 	m_scrolledWindow3->SetScrollRate( 5, 5 );
 	wxBoxSizer* bSizer18;
@@ -350,10 +367,12 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Connect( m_menuItem5->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::GenerirajRSA ) );
 	this->Connect( menuHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnAbout ) );
 	btnAESDijalog->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::AESDijalog ), NULL, this );
+	btnSnimiAESKljuc->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::snimiAESKljuc ), NULL, this );
+	btnUcitajAESKljuc->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::ucitajAESKljuc ), NULL, this );
 	btnUcitajPorukuAES->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::UcitajPorukuAES ), NULL, this );
 	btnKriptirajPorukuAES->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::KriptirajPorukuAES ), NULL, this );
 	btnGenerirajRSAKljuc->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::GenerirajRSA ), NULL, this );
-	btnSnimiRSAKljuc->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::snimiRSAKljuceve ), NULL, this );
+	btnSnimiRSAKljuc->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::snimiRSAKljuc ), NULL, this );
 	btnUcitajRSAKljuc->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::ucitajRSAKljuceve ), NULL, this );
 	btnUcitajPorukuRSA->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::UcitajPorukuRSA ), NULL, this );
 	btnKriptirajPorukuRSA->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::KriptirajPorukuRSA ), NULL, this );
@@ -371,10 +390,12 @@ GUIFrame::~GUIFrame()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::GenerirajRSA ) );
 	this->Disconnect( idMenuAbout, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnAbout ) );
 	btnAESDijalog->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::AESDijalog ), NULL, this );
+	btnSnimiAESKljuc->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::snimiAESKljuc ), NULL, this );
+	btnUcitajAESKljuc->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::ucitajAESKljuc ), NULL, this );
 	btnUcitajPorukuAES->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::UcitajPorukuAES ), NULL, this );
 	btnKriptirajPorukuAES->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::KriptirajPorukuAES ), NULL, this );
 	btnGenerirajRSAKljuc->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::GenerirajRSA ), NULL, this );
-	btnSnimiRSAKljuc->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::snimiRSAKljuceve ), NULL, this );
+	btnSnimiRSAKljuc->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::snimiRSAKljuc ), NULL, this );
 	btnUcitajRSAKljuc->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::ucitajRSAKljuceve ), NULL, this );
 	btnUcitajPorukuRSA->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::UcitajPorukuRSA ), NULL, this );
 	btnKriptirajPorukuRSA->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::KriptirajPorukuRSA ), NULL, this );

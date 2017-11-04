@@ -9,11 +9,13 @@ class GlavniStroj : public wxFrame
     public:
         GlavniStroj(IProjektApp *projektApp);
         virtual ~GlavniStroj();
-        virtual bool GenerirajAESKljuc(const std::string& lozinka, VelicinaAESKljuca& velicina, int brojIteracija, bool koristiSol, GrafickiPodaci& povratniPodaci);
+        virtual bool GenerirajAESKljuc(const std::string& lozinka, int brojIteracija, bool koristiSol, GrafickiPodaci& povratniPodaci);
+        virtual void SnimiAESKljuc(const std::string tajniDatoteka);
+        virtual bool UcitajAESKljuc(const std::string tajniDatoteka);
         virtual bool GenerirajRSAKljuceve(VelicinaRSAKljuca& velicina, GrafickiPodaci& povratniPodaci);
         virtual bool SnimiRSAKljuceve(const std::string privatniDatoteka, const std::string javniDatoteka);
         virtual bool UcitajRSAKljuceve(const std::string privatniDatoteka, const std::string javniDatoteka, GrafickiPodaci& povratniPodaci);
-        virtual bool UpisiAktivneKljuceve(std::string& aesKljuc, std::string& iv);
+        virtual bool UpisiAktivneKljuceve(const std::string& aesKljuc, const std::string& iv, VelicinaAESKljuca velicinaKljuca);
         virtual void ZahtijevajAzuriranjeGrafickihPodataka();
         virtual void KreirajSazetakAES(const std::vector<unsigned char>& poruka);
         virtual void KreirajSazetakRSA(const std::vector<unsigned char>& poruka);

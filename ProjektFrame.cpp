@@ -86,6 +86,19 @@ void ProjektFrame::OnClose(wxCloseEvent &event)
     Unbind(wxOsvjeziPodatke, &ProjektFrame::OsvjeziPodatke, this);
     Destroy();
 }
+void ProjektFrame::snimiAESKljuc( wxCommandEvent& event )
+{
+    const int rezultat = MessageBox(NULL, L"Datoteka AES ključa i inicijalizacijskog vektora\nbit će prepisana i stari sadržaj zamijenjen novim.\nŽelite li nastaviti?",
+                                    L"Snimanje AES ključa i IV u datoteku",  MB_YESNO | MB_ICONQUESTION);
+    if(rezultat==IDNO)
+        return;
+    aplikacija->SnimiAESKljuc();
+}
+void ProjektFrame::ucitajAESKljuc( wxCommandEvent& event )
+{
+    aplikacija->UcitajAESKljuc();
+}
+
 void ProjektFrame::UcitajPoruku( wxCommandEvent& event )
 {
     int stranica;
@@ -309,6 +322,7 @@ void ProjektFrame::OsvjeziPodatke(wxCommandEvent &event)
     GrafickiPodaci *podaci;
     if((podaci = (GrafickiPodaci *)(event.GetClientData()))==nullptr)
         return;
+    btnSnimiAESKljuc->Enable();
     tbAESKljuc->SetValue(podaci->aesKljuc);
     tbIv->SetValue(podaci->iv);
     tbSazetakAES->SetValue(podaci->sazetakAES);
@@ -363,22 +377,18 @@ DijalogAES::DijalogAES(wxFrame *frame, ProjektFrame *pf, ProjektApp *app)
 
 void DijalogAES::GenerirajAES( wxCommandEvent& event )
 {
-    VelicinaAESKljuca velicinaAES;
 
     switch(radioVelicinaAESKljuca->GetSelection())
     {
-        case 0: velicinaAES=VelicinaAESKljuca::AES_mali; break;
-        case 1: velicinaAES=VelicinaAESKljuca::AES_srednji; break;
-        case 2: velicinaAES=VelicinaAESKljuca::AES_veliki; break;
-        default: velicinaAES=VelicinaAESKljuca::AES_srednji;
+        case 0: podaci.velicinaAES=VelicinaAESKljuca::AES_mali; break;
+        case 1: podaci.velicinaAES=VelicinaAESKljuca::AES_srednji; break;
+        case 2: podaci.velicinaAES=VelicinaAESKljuca::AES_veliki; break;
+        default: podaci.velicinaAES=VelicinaAESKljuca::AES_srednji;
     }
-    aplikacija->GenerirajAESKljuc(this, tcUnosLozinke->GetValue().ToStdString(),velicinaAES, chkSol->GetValue(), podaci);
+    aplikacija->GenerirajAESKljuc(this, tcUnosLozinke->GetValue().ToStdString(), chkSol->GetValue(), podaci);
     tbGeneriraniAES->SetValue(podaci.aesKljuc);
     tbIv->SetValue(podaci.iv);
     tbSol->SetValue(podaci.sol);
-
-
-
 }
 
 void DijalogAES::odustani( wxCommandEvent& event )
@@ -388,8 +398,11 @@ void DijalogAES::odustani( wxCommandEvent& event )
 
 void DijalogAES::potvrdi( wxCommandEvent& event )
 {
-    aplikacija->UpisiAktivneKljuceve(podaci.aesKljuc, podaci.iv);
-    aplikacija->ZahtijevajAzuriranjeGrafickihPodataka();
+    if(tbGeneriraniAES->GetValue().size()>0&&tbIv->GetValue().size()>0)
+    {
+        aplikacija->UpisiAktivneKljuceve(podaci.aesKljuc, podaci.iv, podaci.velicinaAES);
+        aplikacija->ZahtijevajAzuriranjeGrafickihPodataka();
+    }
     Destroy();
 }
 

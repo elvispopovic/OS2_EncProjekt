@@ -46,10 +46,19 @@ int ProjektApp::OnExit()
     return 0;
 }
 
-void ProjektApp::GenerirajAESKljuc(IDijalogAES *dijalog, const std::string& lozinka, VelicinaAESKljuca velicina, bool koristiSol, GrafickiPodaci& povratniPodaci)
+void ProjektApp::GenerirajAESKljuc(IDijalogAES *dijalog, const std::string& lozinka, bool koristiSol, GrafickiPodaci& povratniPodaci)
 {
-    glavniStroj->GenerirajAESKljuc(lozinka,velicina,1024, koristiSol, povratniPodaci);
+    glavniStroj->GenerirajAESKljuc(lozinka,1024, koristiSol, povratniPodaci);
 }
+void ProjektApp::SnimiAESKljuc()
+{
+    glavniStroj->SnimiAESKljuc("tajni_kljuc");
+}
+bool ProjektApp::UcitajAESKljuc()
+{
+    return glavniStroj->UcitajAESKljuc("tajni_kljuc");
+}
+
 void ProjektApp::GenerirajRSAKljuceve(VelicinaRSAKljuca& velicina, GrafickiPodaci& povratniPodaci)
 {
     glavniStroj->GenerirajRSAKljuceve(velicina, povratniPodaci);
@@ -124,9 +133,9 @@ void ProjektApp::AzurirajGrafickePodatke(const GrafickiPodaci& podaci)
     wxQueueEvent( wxGlavnaFormaDest, commandEvent );
 }
 
-void ProjektApp::UpisiAktivneKljuceve(std::string& aesKljuc, std::string& iv)
+void ProjektApp::UpisiAktivneKljuceve(const std::string& aesKljuc, const std::string& iv, VelicinaAESKljuca velicinaKljuca)
 {
-    glavniStroj->UpisiAktivneKljuceve(aesKljuc, iv);
+    glavniStroj->UpisiAktivneKljuceve(aesKljuc, iv, velicinaKljuca);
 }
 
 void ProjektApp::ZahtijevajAzuriranjeGrafickihPodataka()

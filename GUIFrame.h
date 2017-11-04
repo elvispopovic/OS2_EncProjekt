@@ -22,11 +22,11 @@
 #include <wx/statusbr.h>
 #include <wx/textctrl.h>
 #include <wx/button.h>
+#include <wx/statline.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/scrolwin.h>
 #include <wx/stattext.h>
-#include <wx/statline.h>
 #include <wx/radiobox.h>
 #include <wx/aui/auibook.h>
 #include <wx/frame.h>
@@ -55,6 +55,9 @@ class GUIFrame : public wxFrame
 		wxScrolledWindow* m_scrolledWindow1;
 		wxTextCtrl* tbAESKljuc;
 		wxButton* btnAESDijalog;
+		wxStaticLine* m_staticline5;
+		wxButton* btnSnimiAESKljuc;
+		wxButton* btnUcitajAESKljuc;
 		wxTextCtrl* tbIv;
 		wxStaticBoxSizer* okvirPorukeAES;
 		wxTextCtrl* txtAESPoruka;
@@ -91,9 +94,11 @@ class GUIFrame : public wxFrame
 		virtual void AESDijalog( wxCommandEvent& event ) { event.Skip(); }
 		virtual void GenerirajRSA( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
+		virtual void snimiAESKljuc( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ucitajAESKljuc( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UcitajPorukuAES( wxCommandEvent& event ) { event.Skip(); }
 		virtual void KriptirajPorukuAES( wxCommandEvent& event ) { event.Skip(); }
-		virtual void snimiRSAKljuceve( wxCommandEvent& event ) { event.Skip(); }
+		virtual void snimiRSAKljuc( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ucitajRSAKljuceve( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UcitajPorukuRSA( wxCommandEvent& event ) { event.Skip(); }
 		virtual void KriptirajPorukuRSA( wxCommandEvent& event ) { event.Skip(); }

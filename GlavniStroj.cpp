@@ -17,25 +17,25 @@ GlavniStroj::~GlavniStroj()
 }
 
 
-bool GlavniStroj::GenerirajAESKljuc(const string& lozinka, VelicinaAESKljuca& velicina, int brojIteracija, bool koristiSol, GrafickiPodaci& povratniPodaci)
+bool GlavniStroj::GenerirajAESKljuc(const string& lozinka, int brojIteracija, bool koristiSol, GrafickiPodaci& povratniPodaci)
 {
     SecByteBlock sbAesKljuc, sbIv, sbSol;
     AutoSeededX917RNG<CryptoPP::AES> aesRng;
     PKCS5_PBKDF2_HMAC<SHA256> pbkdf;
-    sbSol.New(velicina);
+    sbSol.New(povratniPodaci.velicinaAES);
     sbIv.New(AES::BLOCKSIZE);
-    sbAesKljuc.New(velicina);
-    aesRng.GenerateBlock(sbSol,velicina);
+    sbAesKljuc.New(povratniPodaci.velicinaAES);
+    aesRng.GenerateBlock(sbSol,povratniPodaci.velicinaAES);
     aesRng.GenerateBlock(sbIv,AES::BLOCKSIZE);
     if(lozinka.size()>0)
     {
         if(koristiSol)
-            pbkdf.DeriveKey(sbAesKljuc,velicina,0x00,(byte*)(lozinka.data()),lozinka.size(),sbSol, sbSol.size(),brojIteracija);
+            pbkdf.DeriveKey(sbAesKljuc,povratniPodaci.velicinaAES,0x00,(byte*)(lozinka.data()),lozinka.size(),sbSol, sbSol.size(),brojIteracija);
         else
-            pbkdf.DeriveKey(sbAesKljuc,velicina,0x00,(byte*)(lozinka.data()),lozinka.size(),nullptr, 0,brojIteracija);
+            pbkdf.DeriveKey(sbAesKljuc,povratniPodaci.velicinaAES,0x00,(byte*)(lozinka.data()),lozinka.size(),nullptr, 0,brojIteracija);
     }
     else
-        aesRng.GenerateBlock(sbAesKljuc,velicina);
+        aesRng.GenerateBlock(sbAesKljuc,povratniPodaci.velicinaAES);
 
     povratniPodaci.aesKljuc.assign(IspisiBinarnePodatke(sbAesKljuc.data(),sbAesKljuc.size()));
     povratniPodaci.iv.assign(IspisiBinarnePodatke(sbIv.data(),sbIv.size()));
@@ -44,6 +44,49 @@ bool GlavniStroj::GenerirajAESKljuc(const string& lozinka, VelicinaAESKljuca& ve
     else
         povratniPodaci.sol.assign(string(" ---"));
 
+    return true;
+}
+
+void GlavniStroj::SnimiAESKljuc(const std::string tajniDatoteka)
+{
+    ByteQueue red;
+    string nazivTajni=tajniDatoteka+".txt";
+    string tajniKljucHex;
+    FileSink tajniDatSink(nazivTajni.c_str());
+    if(aesKljuc.size()==0)
+        return;
+    HexEncoder he (new StringSink(tajniKljucHex));
+    he.Put(aesKljuc.size());
+    he.Put(aesKljuc.BytePtr(),aesKljuc.size());
+    he.Put(iv.BytePtr(),iv.size());
+    red.Put(reinterpret_cast<const byte*>(tajniKljucHex.data()),tajniKljucHex.size());
+    red.CopyTo(tajniDatSink);
+}
+bool GlavniStroj::UcitajAESKljuc(const std::string tajniDatoteka)
+{
+    string nazivTajni=tajniDatoteka+".txt";
+    ByteQueue red;
+    byte velicina;
+
+    string test;
+    try
+    {
+        FileSource fsTajni(nazivTajni.c_str(), false, new HexDecoder(new Redirector(red)));
+        fsTajni.PumpAll();
+        red.Get(velicina);
+        aesKljuc.resize(velicina);
+        red.Get(aesKljuc.data(),velicina);
+        iv.resize(velicina);
+        ArraySink asIv(iv.data(),velicina);
+        red.CopyTo(asIv);
+        iv.resize(asIv.TotalPutLength());
+    }
+    catch( ... )
+    {
+        return false;
+    }
+
+    ZahtijevajAzuriranjeGrafickihPodataka();
     return true;
 }
 
@@ -111,17 +154,17 @@ bool GlavniStroj::UcitajRSAKljuceve(const std::string privatniDatoteka, const st
     return true;
 }
 
-bool GlavniStroj::UpisiAktivneKljuceve(string& aesKljuc, string& iv)
+bool GlavniStroj::UpisiAktivneKljuceve(const string& aesKljuc, const string& iv, VelicinaAESKljuca velicinaKljuca)
 {
-    this->aesKljuc.resize(AES::MAX_KEYLENGTH);
-    ArraySink as1(this->aesKljuc.BytePtr(), this->aesKljuc.size());
-    StringSource ss1(aesKljuc, true, new HexDecoder(&as1));
-    this->aesKljuc.resize(as1.TotalPutLength());
+
+    this->aesKljuc.resize(velicinaKljuca);
+    HexDecoder he1 (new ArraySink(this->aesKljuc.BytePtr(), this->aesKljuc.size()));
+    he1.Put((byte*)(aesKljuc.c_str()), aesKljuc.size());
 
     this->iv.resize(AES::BLOCKSIZE);
-    ArraySink as2(this->iv.BytePtr(), this->iv.size());
-    StringSource ss2(iv,true, new HexDecoder(&as2));
-
+    HexDecoder he2 (new ArraySink(this->iv.BytePtr(), this->iv.size()));
+    he2.Put((byte*)(iv.c_str()),iv.size());
+    return true;
 }
 
 void GlavniStroj::ZahtijevajAzuriranjeGrafickihPodataka()

@@ -28,6 +28,8 @@ class ProjektFrame : public GUIFrame
         std::vector<unsigned char> porukaSadrzajAES, porukaSadrzajRSA;
         std::vector<unsigned char> porukaPotpisivanje, potpis;
         virtual void OnClose(wxCloseEvent& event);
+        virtual void snimiAESKljuc( wxCommandEvent& event );
+        virtual void ucitajAESKljuc( wxCommandEvent& event );
         virtual void UcitajPorukuAES( wxCommandEvent& event );
         virtual void UcitajPorukuRSA( wxCommandEvent& event );
         virtual void UcitajPoruku( wxCommandEvent& event );
