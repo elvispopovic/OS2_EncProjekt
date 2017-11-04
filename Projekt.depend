@@ -3475,10 +3475,10 @@
 	<iomanip>
 	"ProjektFrame.h"
 
-1509727941 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\glavnistroj.cpp
+1509784285 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\glavnistroj.cpp
 	"GlavniStroj.h"
 
-1509730596 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\glavnistroj.h
+1509782816 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\glavnistroj.h
 	"GUIFrame.h"
 	"Interfaces.h"
 
@@ -3788,7 +3788,7 @@
 	<wx/checkbox.h>
 	<wx/dialog.h>
 
-1509712796 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\interfaces.h
+1509782909 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\interfaces.h
 	<modes.h>
 	<aes.h>
 	<sha.h>
@@ -3809,12 +3809,12 @@
 	<wx/wx.h>
 	"GUIFrame.h"
 
-1509730543 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\projektapp.cpp
+1509784476 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\projektapp.cpp
 	"wx_pch.h"
 	"ProjektApp.h"
 	"ProjektFrame.h"
 
-1509730520 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\projektapp.h
+1509784481 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\projektapp.h
 	<wx/wx.h>
 	<wx/app.h>
 	<mutex>
@@ -3825,7 +3825,7 @@
 	"ProjektApp.h"
 	"GUIFrame.h"
 
-1509730596 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\projektframe.cpp
+1509784570 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\projektframe.cpp
 	"wx_pch.h"
 	<wx/wfstream.h>
 	<wx/txtstrm.h>

@@ -132,7 +132,6 @@ void ProjektFrame::UcitajPorukuAES( wxCommandEvent& event )
     std::ifstream citanje_datoteke( openFileDialog.GetPath().ToAscii(), std::ios::binary );
     porukaSadrzajAES.assign((std::istreambuf_iterator<char>(citanje_datoteke)), (std::istreambuf_iterator<char>()));
     porukaPotpisivanje.clear();
-    //porukaPotpisivanje.reserve(porukaSadrzajAES.size());
     porukaPotpisivanje.insert(porukaPotpisivanje.end(),porukaSadrzajAES.begin(),porukaSadrzajAES.end());
 
     std::vector<unsigned char>::iterator it;
@@ -282,7 +281,15 @@ void ProjektFrame::snimiRSAKljuceve( wxCommandEvent& event )
 }
 void ProjektFrame::ucitajRSAKljuceve( wxCommandEvent& event )
 {
-    aplikacija->UcitajRSAKljuceve();
+    GrafickiPodaci podaci;
+    if(!aplikacija->UcitajRSAKljuceve(podaci))
+    {
+        wxMessageBox(wxT("Datoteke sa parom ključeva nisu pronađene ili su zapisi u njima neispravni."),"Upozorenje!");
+        return;
+    }
+
+    tbRSAPrivatniKljuc->SetValue(podaci.privatniKljuc);
+    tbRSAJavniKljuc->SetValue(podaci.javniKljuc);
 }
 
 void ProjektFrame::PotpisiPoruku( wxCommandEvent& event )

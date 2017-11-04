@@ -64,10 +64,10 @@ bool GlavniStroj::SnimiRSAKljuceve(const string privatniDatoteka, const string j
     AutoSeededRandomPool rsaRng;
     RSA::PublicKey javniKljuc(privatniKljuc);
 
-    string nazivDERprivatni=privatniDatoteka+"DER.key";
-    string nazivDERjavni=javniDatoteka+"DER.key";
+    string nazivPrivatni=privatniDatoteka+"DER.key";
+    string nazivJavni=javniDatoteka+"DER.key";
 
-    FileSink privDatSinkDER(nazivDERprivatni.c_str()), javDatSinkDER(nazivDERjavni.c_str());
+    FileSink privDatSinkDER(nazivPrivatni.c_str()), javDatSinkDER(nazivJavni.c_str());
     if(!privatniKljuc.Validate(rsaRng,3))
         return false;
     privatniKljuc.DEREncodePrivateKey(red1);
@@ -78,16 +78,36 @@ bool GlavniStroj::SnimiRSAKljuceve(const string privatniDatoteka, const string j
     javDatSinkDER.MessageEnd();
 
     string privKljucStr, javKljucStr;
-    nazivDERprivatni=privatniDatoteka+".txt";
-    nazivDERjavni=javniDatoteka+".txt";
-    FileSink privDatSink(nazivDERprivatni.c_str()), javDatSink(nazivDERjavni.c_str());
+    nazivPrivatni=privatniDatoteka+".txt";
+    nazivJavni=javniDatoteka+".txt";
+    FileSink privDatSink(nazivPrivatni.c_str()), javDatSink(nazivJavni.c_str());
     privatniKljuc.Save(HexEncoder(&privDatSink).Ref());
     javniKljuc.Save(HexEncoder(&javDatSink).Ref());
     return true;
 }
-bool GlavniStroj::UcitajRSAKljuceve(const std::string privatniDatoteka, const std::string javniDatoteka)
+bool GlavniStroj::UcitajRSAKljuceve(const std::string privatniDatoteka, const std::string javniDatoteka, GrafickiPodaci& povratniPodaci)
 {
-
+    vector<unsigned char> pkPolje;
+    pkPolje.resize(1024);
+    string nazivPrivatni=privatniDatoteka+".txt";
+    string nazivJavni=javniDatoteka+".txt";
+    ByteQueue redPrivatni, redJavni;
+    try
+    {
+        RSA::PublicKey javniKljuc;
+        FileSource fsPrivatni(nazivPrivatni.c_str(), false, new HexDecoder(new Redirector(redPrivatni)));
+        fsPrivatni.PumpAll();
+        FileSource fsJavni(nazivJavni.c_str(), false, new HexDecoder(new Redirector(redJavni)));
+        fsJavni.PumpAll();
+        privatniKljuc.Load(redPrivatni);
+        javniKljuc.Load(redJavni);
+        privatniKljuc.Save(HexEncoder(new StringSink(povratniPodaci.privatniKljuc),true,2," ").Ref());
+        javniKljuc.Save(HexEncoder(new StringSink(povratniPodaci.javniKljuc),true,2," ").Ref());
+    }
+    catch( ... )
+    {
+        return false;
+    }
     return true;
 }
 
@@ -210,9 +230,6 @@ bool GlavniStroj::EnkriptirajPorukuRSA(const std::vector<unsigned char>& poruka,
         return false;
 
     //PotpisiPoruku(poruka);
-
-
-
     Integer porukaBroj((const byte *)poruka.data(), poruka.size());
     kriptiranoBroj=javniKljuc.ApplyFunction(porukaBroj);
     size_t velicina = kriptiranoBroj.MinEncodedSize();
@@ -247,20 +264,17 @@ bool GlavniStroj::DekriptirajPorukuRSA(const std::vector<unsigned char>& poruka,
 
 bool GlavniStroj::PotpisiPoruku(const vector<unsigned char>& poruka, vector<unsigned char>& potpis)
 {
-    std:: cout << "Potpisivanje" << std::endl;
-        //char *privFileName;
     //FileSource privFile(privFileName, true, new HexDecoder);
     //RSASSA_PKCS1v15_SHA_Signer priv(privFile);
+    //RSASS<PSSR, Whirlpool>::Signer potpisivanje;
     PorukaPodaci upis;
 
     AutoSeededRandomPool rng;
-    if(!privatniKljuc.GetModulus()==0)
+    if(privatniKljuc.GetModulus()==0)
         return false;
-
     upis.potpisAES.clear();
 
-    //RSASS<PSSR, Whirlpool>::Signer potpisivanje;
-    RSASS<PSSR, SHA224>::Signer potpisivanje(privatniKljuc);
+    RSASS<PSSR, SHA256>::Signer potpisivanje(privatniKljuc);
     potpis.resize(privatniKljuc.GetModulus().ByteCount());
 
     ArraySink potpisSink(potpis.data(),potpis.size());
@@ -274,13 +288,10 @@ bool GlavniStroj::PotpisiPoruku(const vector<unsigned char>& poruka, vector<unsi
 
 bool GlavniStroj::VerificirajPoruku(const vector<unsigned char>& poruka, const vector<unsigned char>& potpis)
 {
-    std:: cout << "Verificiranje" << std::endl;
+
     PorukaPodaci upis;
-    //char *pubFileName;
-    //FileSource pubFile(pubFilename, true, new HexDecoder);
-	//RSASSA_PKCS1v15_SHA_Verifier pub(pubFile);
     RSA::PublicKey javniKljuc(privatniKljuc);
-    RSASS<PSSR, SHA224>::Verifier verifikacija(javniKljuc);
+    RSASS<PSSR, SHA256>::Verifier verifikacija(javniKljuc);
     bool rezultat = false;
 
     rezultat=verifikacija.VerifyMessage(poruka.data(),poruka.size(), potpis.data(), potpis.size());

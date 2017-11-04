@@ -58,9 +58,9 @@ void ProjektApp::SnimiRSAKljuceve()
 {
     glavniStroj->SnimiRSAKljuceve("privatni_kljuc","javni_kljuc");
 }
-void ProjektApp::UcitajRSAKljuceve()
+bool ProjektApp::UcitajRSAKljuceve(GrafickiPodaci& povratniPodaci)
 {
-    glavniStroj->UcitajRSAKljuceve("privatni_kljuc","javni_kljuc");
+    return glavniStroj->UcitajRSAKljuceve("privatni_kljuc","javni_kljuc", povratniPodaci);
 }
 
 bool ProjektApp::EnkriptirajPorukuAES(const std::vector<unsigned char>& poruka)
@@ -81,9 +81,7 @@ bool ProjektApp::DekriptirajPorukuRSA(const std::vector<unsigned char>& poruka)
 }
 bool ProjektApp::PotpisiPoruku(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& potpis)
 {
-    bool rezultat = glavniStroj->PotpisiPoruku(poruka, potpis);
-    if(!rezultat) return false;
-    return true;
+    return glavniStroj->PotpisiPoruku(poruka, potpis);
 }
 bool ProjektApp::VerificirajPoruku(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& potpis)
 {
