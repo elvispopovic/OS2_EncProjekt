@@ -17,7 +17,7 @@
 #include <files.h>
 
 enum VelicinaAESKljuca:unsigned char{AES_mali=16, AES_srednji=24, AES_veliki=32};
-enum VelicinaRSAKljuca:unsigned short{RSA_mali=128, RSA_srednji=256, RSA_veliki=384};
+enum VelicinaRSAKljuca:unsigned short{RSA_mali=256, RSA_srednji=384, RSA_veliki=512};
 
 struct GrafickiPodaci
 {

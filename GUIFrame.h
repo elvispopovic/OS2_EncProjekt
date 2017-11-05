@@ -50,6 +50,7 @@ class GUIFrame : public wxFrame
 		wxMenu* fileMenu;
 		wxMenu* m_menu3;
 		wxMenu* m_menu1;
+		wxMenu* m_menu2;
 		wxMenu* helpMenu;
 		wxStatusBar* statusBar;
 		wxAuiNotebook* biljeznica;
@@ -82,6 +83,9 @@ class GUIFrame : public wxFrame
 		wxStaticBoxSizer* okvirPorukeRSA;
 		wxTextCtrl* txtRSAPoruka;
 		wxButton* btnUcitajPorukuRSA;
+		wxButton* btnUcitajSifratRSA;
+		wxButton* btnSnimiPorukuRSA;
+		wxButton* btnSnimiSifratRSA;
 		wxButton* btnKriptirajPorukuRSA;
 		wxTextCtrl* tbSazetakRSA;
 		wxScrolledWindow* m_scrolledWindow3;
@@ -98,16 +102,19 @@ class GUIFrame : public wxFrame
 		virtual void UcitajSifratAES( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AESDijalog( wxCommandEvent& event ) { event.Skip(); }
 		virtual void GenerirajRSA( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ucitajAESKljuc( wxCommandEvent& event ) { event.Skip(); }
+		virtual void ucitajRSAKljuceve( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
 		virtual void snimiAESKljuc( wxCommandEvent& event ) { event.Skip(); }
-		virtual void ucitajAESKljuc( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UcitajPorukuAES( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SnimiPorukuAES( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SnimiSifratAES( wxCommandEvent& event ) { event.Skip(); }
 		virtual void KriptirajPorukuAES( wxCommandEvent& event ) { event.Skip(); }
 		virtual void snimiRSAKljuceve( wxCommandEvent& event ) { event.Skip(); }
-		virtual void ucitajRSAKljuceve( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UcitajPorukuRSA( wxCommandEvent& event ) { event.Skip(); }
+		virtual void UcitajSifratRSA( wxCommandEvent& event ) { event.Skip(); }
+		virtual void SnimiPorukuRSA( wxCommandEvent& event ) { event.Skip(); }
+		virtual void SnimiSifratRSA( wxCommandEvent& event ) { event.Skip(); }
 		virtual void KriptirajPorukuRSA( wxCommandEvent& event ) { event.Skip(); }
 		virtual void PotpisiPoruku( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Verificiraj( wxCommandEvent& event ) { event.Skip(); }

@@ -97,6 +97,8 @@ void ProjektFrame::snimiAESKljuc( wxCommandEvent& event )
 void ProjektFrame::ucitajAESKljuc( wxCommandEvent& event )
 {
     aplikacija->UcitajAESKljuc();
+    if(biljeznica->GetSelection()!=0)
+        biljeznica->SetSelection(0);
 }
 
 void ProjektFrame::UcitajPoruku( wxCommandEvent& event )
@@ -186,7 +188,7 @@ void ProjektFrame::SnimiPorukuAES( wxCommandEvent& event )
 void ProjektFrame::SnimiSifratAES( wxCommandEvent& event )
 {
     wxFileDialog saveFileDialog(this, wxT("Snimi šifrat"), "", "",
-                       wxT("datoteke šifrata (*.dat)|*.dat"), wxFD_SAVE);
+                       wxT("datoteke šifrata (*.aes)|*.aes"), wxFD_SAVE);
     wxFileName imeDatoteke(wxStandardPaths::Get().GetExecutablePath());
     saveFileDialog.SetDirectory(imeDatoteke.GetPath());
     /* otvaranje dijaloga */
@@ -203,7 +205,7 @@ void ProjektFrame::UcitajSifratAES( wxCommandEvent& event )
     wxString upis;
     int brojac;
     wxFileDialog openFileDialog(this, wxT("Učitaj enkriptiranu datoteku"), "", "",
-                       "sve datoteke (*.dat)|*.dat", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+                       "datoteke aes šifrata (*.aes)|*.aes", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
     wxFileName imeDatoteke(wxStandardPaths::Get().GetExecutablePath());
     openFileDialog.SetDirectory(imeDatoteke.GetPath());
     if (openFileDialog.ShowModal() == wxID_CANCEL)
@@ -212,7 +214,7 @@ void ProjektFrame::UcitajSifratAES( wxCommandEvent& event )
     porukaSadrzajAES.assign((std::istreambuf_iterator<char>(citanje_datoteke)), (std::istreambuf_iterator<char>()));
     citanje_datoteke.close();
     porukaPotpisivanje.clear();
-    aplikacija->UpisiMedjuspremnikPorukeRSA(porukaSadrzajAES);
+    aplikacija->UpisiMedjuspremnikPorukeAES(porukaSadrzajAES);
     std::vector<unsigned char>::iterator it;
     for(brojac = 0, it = porukaSadrzajAES.begin(); it!=porukaSadrzajAES.end(); ++it, ++brojac)
         if(brojac++<1024)
@@ -225,9 +227,10 @@ void ProjektFrame::UcitajSifratAES( wxCommandEvent& event )
     upis.append(wxString::Format(L"\n"));
     txtAESPoruka->Clear();
     txtAESPoruka->AppendText(upis);
+    tbSazetakAES->Clear();
     txtAESPorukaPotpis->Clear();
 
-    okvirPorukeAES->GetStaticBox()->SetLabel(L"Poruka - učitan šifrat");
+    okvirPorukeAES->GetStaticBox()->SetLabel(L"Poruka - učitan AES šifrat");
     btnKriptirajPorukuAES->Enable();
     btnKriptirajPorukuAES->SetLabel(wxT("Dekriptiraj"));
     btnSnimiPorukuAES->Disable();
@@ -265,7 +268,71 @@ void ProjektFrame::UcitajPorukuRSA( wxCommandEvent& event )
 
     btnKriptirajPorukuRSA->Enable();
     btnKriptirajPorukuRSA->SetLabel(wxT("Enkriptiraj"));
-    btnSnimiSifratAES->Disable();
+    btnSnimiPorukuRSA->Enable();
+    btnSnimiSifratRSA->Disable();
+}
+void ProjektFrame::SnimiPorukuRSA( wxCommandEvent& event )
+{
+    wxFileDialog saveFileDialog(this, wxT("Snimi poruku"), "", "",
+                       wxT("sve datoteke (*.*)|*.*"), wxFD_SAVE);
+    wxFileName imeDatoteke(wxStandardPaths::Get().GetExecutablePath());
+    saveFileDialog.SetDirectory(imeDatoteke.GetPath());
+    if (saveFileDialog.ShowModal() == wxID_CANCEL)
+        return;
+    std::ofstream snimanje_u_datoteku( saveFileDialog.GetPath().ToAscii(), std::ios::binary );
+    std::copy(porukaSadrzajRSA.begin(), porukaSadrzajRSA.end(), std::ostreambuf_iterator<char>(snimanje_u_datoteku));
+	snimanje_u_datoteku.close();
+}
+
+void ProjektFrame::SnimiSifratRSA( wxCommandEvent& event )
+{
+    wxFileDialog saveFileDialog(this, wxT("Snimi RSA šifrat"), "", "",
+                       wxT("datoteke RSA šifrata (*.rsa)|*.rsa"), wxFD_SAVE);
+    wxFileName imeDatoteke(wxStandardPaths::Get().GetExecutablePath());
+    saveFileDialog.SetDirectory(imeDatoteke.GetPath());
+    /* otvaranje dijaloga */
+    if (saveFileDialog.ShowModal() == wxID_CANCEL)
+        return;
+    std::ofstream snimanje_u_datoteku( saveFileDialog.GetPath().ToAscii(), std::ios::binary );
+    //snimanje_u_datoteku.write(reinterpret_cast<char *>(&porukaSadrzajAES[0]), porukaSadrzajAES.size());
+    std::copy(porukaSadrzajRSA.begin(), porukaSadrzajRSA.end(), std::ostreambuf_iterator<char>(snimanje_u_datoteku));
+	snimanje_u_datoteku.close();
+}
+void ProjektFrame::UcitajSifratRSA( wxCommandEvent& event )
+{
+    wchar_t ispis[3];
+    wxString upis;
+    int brojac;
+    wxFileDialog openFileDialog(this, wxT("Učitaj enkriptiranu datoteku"), "", "",
+                       "datoteke rsa šifrata (*.rsa)|*.rsa", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+    wxFileName imeDatoteke(wxStandardPaths::Get().GetExecutablePath());
+    openFileDialog.SetDirectory(imeDatoteke.GetPath());
+    if (openFileDialog.ShowModal() == wxID_CANCEL)
+        return;
+    std::ifstream citanje_datoteke( openFileDialog.GetPath().ToAscii(), std::ios::binary );
+    porukaSadrzajRSA.assign((std::istreambuf_iterator<char>(citanje_datoteke)), (std::istreambuf_iterator<char>()));
+    citanje_datoteke.close();
+
+    aplikacija->UpisiMedjuspremnikPorukeRSA(porukaSadrzajRSA);
+    std::vector<unsigned char>::iterator it;
+    for(brojac = 0, it = porukaSadrzajRSA.begin(); it!=porukaSadrzajRSA.end(); ++it, ++brojac)
+        if(brojac++<1024)
+            upis.append(wxString::Format("%02X ",(int)(*it)));
+        else
+        {
+            upis.append(wxString("..."));
+            break;
+        }
+    upis.append(wxString::Format(L"\n"));
+    txtRSAPoruka->Clear();
+    txtRSAPoruka->AppendText(upis);
+    tbSazetakRSA->Clear();
+
+    okvirPorukeRSA->GetStaticBox()->SetLabel(L"Poruka - učitan RSA šifrat");
+    btnKriptirajPorukuRSA->Enable();
+    btnKriptirajPorukuRSA->SetLabel(wxT("Dekriptiraj"));
+    btnSnimiPorukuRSA->Disable();
+    btnSnimiSifratRSA->Enable();
 }
 
 void ProjektFrame::KriptirajPorukuAES( wxCommandEvent& event )
@@ -277,8 +344,8 @@ void ProjektFrame::KriptirajPorukuAES( wxCommandEvent& event )
                 return;
             aplikacija->DohvatiMedjuspremnikPorukeAES(porukaSadrzajAES);
             btnKriptirajPorukuAES->SetLabel(wxT("Dekriptiraj"));
-             btnSnimiSifratAES->Enable();
-             btnSnimiPorukuAES->Disable();
+            btnSnimiSifratAES->Enable();
+            btnSnimiPorukuAES->Disable();
         }
         else
         {
@@ -289,6 +356,7 @@ void ProjektFrame::KriptirajPorukuAES( wxCommandEvent& event )
             }
 
             aplikacija->DohvatiMedjuspremnikPorukeAES(porukaSadrzajAES);
+            aplikacija->KreirajSazetakAES(porukaSadrzajAES);
             btnKriptirajPorukuAES->SetLabel(wxT("Enkriptiraj"));
             btnSnimiSifratAES->Disable();
             btnSnimiPorukuAES->Enable();
@@ -307,13 +375,18 @@ void ProjektFrame::KriptirajPorukuRSA( wxCommandEvent& event )
 
             aplikacija->DohvatiMedjuspremnikPorukeRSA(porukaSadrzajRSA);
             btnKriptirajPorukuRSA->SetLabel(wxT("Dekriptiraj"));
+            btnSnimiSifratRSA->Enable();
+            btnSnimiPorukuRSA->Disable();
         }
         else
         {
             if(!aplikacija->DekriptirajPorukuRSA(porukaSadrzajRSA))
                 return;
             aplikacija->DohvatiMedjuspremnikPorukeRSA(porukaSadrzajRSA);
+            aplikacija->KreirajSazetakRSA(porukaSadrzajRSA);
             btnKriptirajPorukuRSA->SetLabel(wxT("Enkriptiraj"));
+            btnSnimiSifratRSA->Disable();
+            btnSnimiPorukuRSA->Enable();
         }
 }
 
@@ -338,6 +411,8 @@ void ProjektFrame::AESDijalog( wxCommandEvent& event )
     DijalogAES *dijalog = new DijalogAES(0L,this,this->aplikacija);
     //dijalog->upisiAdreseAdaptera(adreseAdaptera);
     dijalog->Show();
+    if(biljeznica->GetSelection()!=0)
+        biljeznica->SetSelection(0);
 }
 
 void ProjektFrame::GenerirajRSA( wxCommandEvent& event )
@@ -374,6 +449,8 @@ void ProjektFrame::ucitajRSAKljuceve( wxCommandEvent& event )
         wxMessageBox(wxT("Datoteke sa parom ključeva nisu pronađene ili su zapisi u njima neispravni."),"Upozorenje!");
         return;
     }
+    if(biljeznica->GetSelection()!=1)
+        biljeznica->SetSelection(1);
 
     tbRSAPrivatniKljuc->SetValue(podaci.privatniKljuc);
     tbRSAJavniKljuc->SetValue(podaci.javniKljuc);
@@ -429,6 +506,7 @@ void ProjektFrame::IspisiPoruku(wxCommandEvent &event)
         txtAESPorukaPotpis1->Clear();
         txtAESPorukaPotpis1->AppendText(podaci->potpisAES.c_str());
     }
+
 
     switch(podaci->verificirano)
     {

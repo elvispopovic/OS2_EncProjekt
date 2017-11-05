@@ -36,6 +36,9 @@ class ProjektFrame : public GUIFrame
         virtual void UcitajSifratAES( wxCommandEvent& event );
 
         virtual void UcitajPorukuRSA( wxCommandEvent& event );
+        virtual void SnimiPorukuRSA( wxCommandEvent& event );
+        virtual void SnimiSifratRSA( wxCommandEvent& event );
+        virtual void UcitajSifratRSA( wxCommandEvent& event );
         virtual void UcitajPoruku( wxCommandEvent& event );
         virtual void KriptirajPorukuAES( wxCommandEvent& event );
         virtual void KriptirajPorukuRSA( wxCommandEvent& event );
