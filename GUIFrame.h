@@ -98,7 +98,7 @@ class GUIFrame : public wxFrame
 		virtual void ucitajAESKljuc( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UcitajPorukuAES( wxCommandEvent& event ) { event.Skip(); }
 		virtual void KriptirajPorukuAES( wxCommandEvent& event ) { event.Skip(); }
-		virtual void snimiRSAKljuc( wxCommandEvent& event ) { event.Skip(); }
+		virtual void snimiRSAKljuceve( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ucitajRSAKljuceve( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UcitajPorukuRSA( wxCommandEvent& event ) { event.Skip(); }
 		virtual void KriptirajPorukuRSA( wxCommandEvent& event ) { event.Skip(); }

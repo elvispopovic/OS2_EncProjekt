@@ -400,7 +400,7 @@ void DijalogAES::potvrdi( wxCommandEvent& event )
 {
     if(tbGeneriraniAES->GetValue().size()>0&&tbIv->GetValue().size()>0)
     {
-        aplikacija->UpisiAktivneKljuceve(podaci.aesKljuc, podaci.iv, podaci.velicinaAES);
+        aplikacija->UpisiAktivneKljuceve(podaci.aesKljuc, podaci.iv);
         aplikacija->ZahtijevajAzuriranjeGrafickihPodataka();
     }
     Destroy();

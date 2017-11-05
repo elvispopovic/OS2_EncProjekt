@@ -52,34 +52,32 @@ void GlavniStroj::SnimiAESKljuc(const std::string tajniDatoteka)
     ByteQueue red;
     string nazivTajni=tajniDatoteka+".txt";
     string tajniKljucHex;
-    FileSink tajniDatSink(nazivTajni.c_str());
     if(aesKljuc.size()==0)
         return;
+    FileSink tajniDatSink(nazivTajni.c_str());
     HexEncoder he (new StringSink(tajniKljucHex));
-    he.Put(aesKljuc.size());
-    he.Put(aesKljuc.BytePtr(),aesKljuc.size());
-    he.Put(iv.BytePtr(),iv.size());
-    red.Put(reinterpret_cast<const byte*>(tajniKljucHex.data()),tajniKljucHex.size());
-    red.CopyTo(tajniDatSink);
+    he.Put(aesKljuc.size()); //dodaje se velicina aes ključa
+    he.Put(aesKljuc.BytePtr(),aesKljuc.size()); //dodaje se aes ključ
+    he.Put(iv.BytePtr(),iv.size()); //dodaje se inicijalizacijski vektor
+    red.Put(reinterpret_cast<const byte*>(tajniKljucHex.data()),tajniKljucHex.size()); //sve ide u red
+    red.CopyTo(tajniDatSink); //prosljedjuje se upravljaču datoteke na snimanje
 }
 bool GlavniStroj::UcitajAESKljuc(const std::string tajniDatoteka)
 {
     string nazivTajni=tajniDatoteka+".txt";
     ByteQueue red;
     byte velicina;
-
-    string test;
     try
     {
         FileSource fsTajni(nazivTajni.c_str(), false, new HexDecoder(new Redirector(red)));
         fsTajni.PumpAll();
-        red.Get(velicina);
+        red.Get(velicina); //cita jedan bajt velicine
         aesKljuc.resize(velicina);
-        red.Get(aesKljuc.data(),velicina);
-        iv.resize(velicina);
-        ArraySink asIv(iv.data(),velicina);
-        red.CopyTo(asIv);
-        iv.resize(asIv.TotalPutLength());
+        red.Get(aesKljuc.data(),velicina); //cita niz bajtova odredjenih velicinom
+        iv.resize(AES::BLOCKSIZE);
+        ArraySink asIv(iv.data(),AES::BLOCKSIZE);
+        red.CopyTo(asIv); //cita inicijalizacijski vektor koristeći array sink (drugi način)
+        iv.resize(asIv.TotalPutLength()); //resiza
     }
     catch( ... )
     {
@@ -110,9 +108,9 @@ bool GlavniStroj::SnimiRSAKljuceve(const string privatniDatoteka, const string j
     string nazivPrivatni=privatniDatoteka+"DER.key";
     string nazivJavni=javniDatoteka+"DER.key";
 
-    FileSink privDatSinkDER(nazivPrivatni.c_str()), javDatSinkDER(nazivJavni.c_str());
     if(!privatniKljuc.Validate(rsaRng,3))
         return false;
+    FileSink privDatSinkDER(nazivPrivatni.c_str()), javDatSinkDER(nazivJavni.c_str());
     privatniKljuc.DEREncodePrivateKey(red1);
     javniKljuc.DEREncodePublicKey(red2);
     red1.CopyTo(privDatSinkDER);
@@ -123,9 +121,9 @@ bool GlavniStroj::SnimiRSAKljuceve(const string privatniDatoteka, const string j
     string privKljucStr, javKljucStr;
     nazivPrivatni=privatniDatoteka+".txt";
     nazivJavni=javniDatoteka+".txt";
-    FileSink privDatSink(nazivPrivatni.c_str()), javDatSink(nazivJavni.c_str());
-    privatniKljuc.Save(HexEncoder(&privDatSink).Ref());
-    javniKljuc.Save(HexEncoder(&javDatSink).Ref());
+    FileSink privDatSink(nazivPrivatni.c_str()), javDatSink(nazivJavni.c_str()); //FileSink na stogu
+    privatniKljuc.Save(HexEncoder(new Redirector(privDatSink)).Ref()); //adresa sa stoga ne smije ici direktno - zato redirektor
+    javniKljuc.Save(HexEncoder(new Redirector(javDatSink)).Ref());
     return true;
 }
 bool GlavniStroj::UcitajRSAKljuceve(const std::string privatniDatoteka, const std::string javniDatoteka, GrafickiPodaci& povratniPodaci)
@@ -144,8 +142,10 @@ bool GlavniStroj::UcitajRSAKljuceve(const std::string privatniDatoteka, const st
         fsJavni.PumpAll();
         privatniKljuc.Load(redPrivatni);
         javniKljuc.Load(redJavni);
-        privatniKljuc.Save(HexEncoder(new StringSink(povratniPodaci.privatniKljuc),true,2," ").Ref());
-        javniKljuc.Save(HexEncoder(new StringSink(povratniPodaci.javniKljuc),true,2," ").Ref());
+        StringSink ssPriv(povratniPodaci.privatniKljuc);
+        StringSink ssJav(povratniPodaci.javniKljuc);
+        privatniKljuc.Save(HexEncoder(new Redirector(ssPriv),true,2," ").Ref());
+        javniKljuc.Save(HexEncoder(new Redirector(ssJav),true,2," ").Ref());
     }
     catch( ... )
     {
@@ -154,16 +154,18 @@ bool GlavniStroj::UcitajRSAKljuceve(const std::string privatniDatoteka, const st
     return true;
 }
 
-bool GlavniStroj::UpisiAktivneKljuceve(const string& aesKljuc, const string& iv, VelicinaAESKljuca velicinaKljuca)
+bool GlavniStroj::UpisiAktivneKljuceve(const string& aesKljuc, const string& iv)
 {
 
-    this->aesKljuc.resize(velicinaKljuca);
-    HexDecoder he1 (new ArraySink(this->aesKljuc.BytePtr(), this->aesKljuc.size()));
-    he1.Put((byte*)(aesKljuc.c_str()), aesKljuc.size());
+    this->aesKljuc.resize(AES::MAX_KEYLENGTH);
+    ArraySink asAES(this->aesKljuc.BytePtr(), this->aesKljuc.size());
+    StringSource(aesKljuc,true,new HexDecoder(new Redirector(asAES)));
+    this->aesKljuc.resize(asAES.TotalPutLength());
 
     this->iv.resize(AES::BLOCKSIZE);
-    HexDecoder he2 (new ArraySink(this->iv.BytePtr(), this->iv.size()));
-    he2.Put((byte*)(iv.c_str()),iv.size());
+    ArraySink asIv(this->iv.BytePtr(), this->iv.size());
+    StringSource(iv,true,new HexDecoder(new Redirector(asIv)));
+    this->iv.resize(asIv.TotalPutLength());
     return true;
 }
 
@@ -240,7 +242,6 @@ bool GlavniStroj::DekriptirajPorukuAES(const vector<unsigned char>& poruka, vect
     dekriptirano.clear();
     dekriptirano.resize(poruka.size());
     ArraySink dekriptSink(&dekriptirano[0], dekriptirano.size());
-
     try
     {
         ArraySource(poruka.data(), poruka.size(), true, new StreamTransformationFilter(dekriptor, new Redirector(dekriptSink)));
@@ -321,7 +322,7 @@ bool GlavniStroj::PotpisiPoruku(const vector<unsigned char>& poruka, vector<unsi
     potpis.resize(privatniKljuc.GetModulus().ByteCount());
 
     ArraySink potpisSink(potpis.data(),potpis.size());
-    ArraySource ss1(poruka.data(), poruka.size(), true, new SignerFilter(rng,potpisivanje,&potpisSink));
+    ArraySource ss1(poruka.data(), poruka.size(), true, new SignerFilter(rng,potpisivanje,new Redirector(potpisSink)));
     potpis.resize(potpisSink.TotalPutLength());
 
     ArraySource(potpis.data(), potpis.size(), true, new HexEncoder(new StringSink(upis.potpisAES),true,2," "));
@@ -345,56 +346,6 @@ bool GlavniStroj::VerificirajPoruku(const vector<unsigned char>& poruka, const v
     }
     projektApp->UpisiPoruku(upis);
     return rezultat;
-}
-
-void GlavniStroj::Test()
-{
-    string potpisHex;
-    vector<unsigned char> poruka;
-    int i;
-    for(i=0; i<100; i++)
-        poruka.push_back(i);
-
-
-    vector<unsigned char> potpis;
-
-    AutoSeededRandomPool rng;
-    RSA::PrivateKey privatniKljuc;
-    privatniKljuc.GenerateRandomWithKeySize(rng, 256*8);
-
-    RSASS<PSSR, SHA256>::Signer potpisivanje(privatniKljuc);
-
-    RSA::PublicKey javniKljuc(privatniKljuc);
-    RSASS<PSSR, SHA256>::Verifier verifikacija(javniKljuc);
-
-
-    potpis.resize(256);
-    ArraySink potpisSink(potpis.data(), potpis.size());
-    ArraySource as(poruka.data(), poruka.size(), true, new SignerFilter(rng, potpisivanje, &potpisSink));
-    potpis.resize(potpisSink.TotalPutLength());
-
-
-    ArraySource(potpis.data(), potpis.size(), true, new HexEncoder(new StringSink(potpisHex)));
-    cout << "Potpis (hex): " << potpisHex << endl;
-
-
-    bool rezultat = false;
-    rezultat=verifikacija.VerifyMessage(poruka.data(),poruka.size(), potpis.data(), potpis.size());
-
-    //drugi nacin: dobivanje binarnog potpisa iz heksadecimalne reprezentacije
-    vector<unsigned char> potpis1;
-    potpis1.resize(256);
-    ArraySink potpis1Sink(potpis1.data(), potpis1.size());
-    StringSource ss(potpisHex,true, new HexDecoder(&potpis1Sink));
-    potpis1.resize(potpis1Sink.TotalPutLength());
-
-    rezultat = verifikacija.VerifyMessage(poruka.data(),poruka.size(), potpis1.data(), potpis1.size());
-
-    if(rezultat)
-        std::cout << "Provjereno: OK" << std::endl;
-    else
-        std::cout << "Provjereno: ERROR" << std::endl;
-
 }
 
 string GlavniStroj::IspisiBinarnePodatke(byte *podaci, int velicina)

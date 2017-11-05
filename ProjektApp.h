@@ -38,7 +38,7 @@ class ProjektApp : public wxApp, IProjektApp
         virtual void DohvatiMedjuspremnikPorukeAES(std::vector<unsigned char>& poruka);
         virtual void DohvatiMedjuspremnikPorukeRSA(std::vector<unsigned char>& poruka);
         virtual void AzurirajGrafickePodatke(const GrafickiPodaci& podaci);
-        virtual void UpisiAktivneKljuceve(const std::string& aesKljuc, const std::string& iv, VelicinaAESKljuca velicinaKljuca);
+        virtual void UpisiAktivneKljuceve(const std::string& aesKljuc, const std::string& iv);
         virtual void ZahtijevajAzuriranjeGrafickihPodataka();
         virtual void UpisiPoruku(PorukaPodaci& porukaPodaci);
     protected:

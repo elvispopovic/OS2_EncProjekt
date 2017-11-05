@@ -133,9 +133,9 @@ void ProjektApp::AzurirajGrafickePodatke(const GrafickiPodaci& podaci)
     wxQueueEvent( wxGlavnaFormaDest, commandEvent );
 }
 
-void ProjektApp::UpisiAktivneKljuceve(const std::string& aesKljuc, const std::string& iv, VelicinaAESKljuca velicinaKljuca)
+void ProjektApp::UpisiAktivneKljuceve(const std::string& aesKljuc, const std::string& iv)
 {
-    glavniStroj->UpisiAktivneKljuceve(aesKljuc, iv, velicinaKljuca);
+    glavniStroj->UpisiAktivneKljuceve(aesKljuc, iv);
 }
 
 void ProjektApp::ZahtijevajAzuriranjeGrafickihPodataka()
