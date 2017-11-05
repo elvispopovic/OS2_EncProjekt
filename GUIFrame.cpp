@@ -30,21 +30,29 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	fileMenu->Append( menuFileQuit );
 	
 	wxMenuItem* menuUcitajPoruku;
-	menuUcitajPoruku = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("&Učitaj poruku") ) + wxT('\t') + wxT("CTRL+O"), wxT("Učitavanje poruke"), wxITEM_NORMAL );
+	menuUcitajPoruku = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("Učitaj &poruku") ) + wxT('\t') + wxT("CTRL+P"), wxT("Učitavanje poruke"), wxITEM_NORMAL );
 	fileMenu->Append( menuUcitajPoruku );
+	
+	wxMenuItem* menuUcitajSifrat;
+	menuUcitajSifrat = new wxMenuItem( fileMenu, wxID_ANY, wxString( wxT("Učitaj &šifrat") ) + wxT('\t') + wxT("CTRL+S"), wxEmptyString, wxITEM_NORMAL );
+	fileMenu->Append( menuUcitajSifrat );
 	
 	mbar->Append( fileMenu, wxT("&Datoteka") ); 
 	
 	m_menu3 = new wxMenu();
+	m_menu1 = new wxMenu();
+	wxMenuItem* m_menu1Item = new wxMenuItem( m_menu3, wxID_ANY, wxT("&Generiraj ključeve"), wxEmptyString, wxITEM_NORMAL, m_menu1 );
 	wxMenuItem* m_menuItem4;
-	m_menuItem4 = new wxMenuItem( m_menu3, wxID_ANY, wxString( wxT("AES ključ") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu3->Append( m_menuItem4 );
+	m_menuItem4 = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("&AES ključ") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( m_menuItem4 );
 	
 	wxMenuItem* m_menuItem5;
-	m_menuItem5 = new wxMenuItem( m_menu3, wxID_ANY, wxString( wxT("RSA par ključeva") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu3->Append( m_menuItem5 );
+	m_menuItem5 = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("&RSA par ključeva") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( m_menuItem5 );
 	
-	mbar->Append( m_menu3, wxT("Ključevi") ); 
+	m_menu3->Append( m_menu1Item );
+	
+	mbar->Append( m_menu3, wxT("&Ključevi") ); 
 	
 	helpMenu = new wxMenu();
 	wxMenuItem* menuHelpAbout;
@@ -139,13 +147,41 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizer15;
 	bSizer15 = new wxBoxSizer( wxVERTICAL );
 	
-	btnUcitajPorukuAES = new wxButton( okvirPorukeAES->GetStaticBox(), wxID_ANY, wxT("Učitaj"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer15->Add( btnUcitajPorukuAES, 0, wxALL, 5 );
+	wxFlexGridSizer* fgSizer1;
+	fgSizer1 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer1->SetFlexibleDirection( wxBOTH );
+	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	btnUcitajPorukuAES = new wxButton( okvirPorukeAES->GetStaticBox(), wxID_ANY, wxT("Učitaj poruku"), wxDefaultPosition, wxDefaultSize, 0 );
+	btnUcitajPorukuAES->SetMinSize( wxSize( 90,-1 ) );
+	
+	fgSizer1->Add( btnUcitajPorukuAES, 0, wxTOP, 5 );
+	
+	btnUcitajSifratAES = new wxButton( okvirPorukeAES->GetStaticBox(), wxID_ANY, wxT("Učitaj šifrat"), wxDefaultPosition, wxDefaultSize, 0 );
+	btnUcitajSifratAES->SetMinSize( wxSize( 90,-1 ) );
+	
+	fgSizer1->Add( btnUcitajSifratAES, 0, wxTOP, 5 );
+	
+	btnSnimiPorukuAES = new wxButton( okvirPorukeAES->GetStaticBox(), wxID_ANY, wxT("Snimi poruku"), wxDefaultPosition, wxDefaultSize, 0 );
+	btnSnimiPorukuAES->Enable( false );
+	btnSnimiPorukuAES->SetMinSize( wxSize( 90,-1 ) );
+	
+	fgSizer1->Add( btnSnimiPorukuAES, 0, 0, 5 );
+	
+	btnSnimiSifratAES = new wxButton( okvirPorukeAES->GetStaticBox(), wxID_ANY, wxT("Snimi šifrat"), wxDefaultPosition, wxDefaultSize, 0 );
+	btnSnimiSifratAES->Enable( false );
+	btnSnimiSifratAES->SetMinSize( wxSize( 90,-1 ) );
+	
+	fgSizer1->Add( btnSnimiSifratAES, 0, 0, 5 );
+	
+	
+	bSizer15->Add( fgSizer1, 1, wxEXPAND, 5 );
 	
 	btnKriptirajPorukuAES = new wxButton( okvirPorukeAES->GetStaticBox(), wxID_ANY, wxT("Enkriptiraj"), wxDefaultPosition, wxDefaultSize, 0 );
 	btnKriptirajPorukuAES->Enable( false );
+	btnKriptirajPorukuAES->SetMinSize( wxSize( 90,-1 ) );
 	
-	bSizer15->Add( btnKriptirajPorukuAES, 0, wxALL, 5 );
+	bSizer15->Add( btnKriptirajPorukuAES, 0, wxEXPAND|wxTOP, 5 );
 	
 	
 	bSizer9->Add( bSizer15, 0, wxEXPAND, 5 );
@@ -363,6 +399,7 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( GUIFrame::OnClose ) );
 	this->Connect( menuFileQuit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnQuit ) );
 	this->Connect( menuUcitajPoruku->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::UcitajPoruku ) );
+	this->Connect( menuUcitajSifrat->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::UcitajSifratAES ) );
 	this->Connect( m_menuItem4->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::AESDijalog ) );
 	this->Connect( m_menuItem5->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::GenerirajRSA ) );
 	this->Connect( menuHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnAbout ) );
@@ -370,6 +407,9 @@ GUIFrame::GUIFrame( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	btnSnimiAESKljuc->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::snimiAESKljuc ), NULL, this );
 	btnUcitajAESKljuc->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::ucitajAESKljuc ), NULL, this );
 	btnUcitajPorukuAES->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::UcitajPorukuAES ), NULL, this );
+	btnUcitajSifratAES->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::UcitajSifratAES ), NULL, this );
+	btnSnimiPorukuAES->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::SnimiPorukuAES ), NULL, this );
+	btnSnimiSifratAES->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::SnimiSifratAES ), NULL, this );
 	btnKriptirajPorukuAES->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::KriptirajPorukuAES ), NULL, this );
 	btnGenerirajRSAKljuc->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::GenerirajRSA ), NULL, this );
 	btnSnimiRSAKljuc->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::snimiRSAKljuceve ), NULL, this );
@@ -386,6 +426,7 @@ GUIFrame::~GUIFrame()
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( GUIFrame::OnClose ) );
 	this->Disconnect( idMenuQuit, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnQuit ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::UcitajPoruku ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::UcitajSifratAES ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::AESDijalog ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::GenerirajRSA ) );
 	this->Disconnect( idMenuAbout, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( GUIFrame::OnAbout ) );
@@ -393,6 +434,9 @@ GUIFrame::~GUIFrame()
 	btnSnimiAESKljuc->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::snimiAESKljuc ), NULL, this );
 	btnUcitajAESKljuc->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::ucitajAESKljuc ), NULL, this );
 	btnUcitajPorukuAES->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::UcitajPorukuAES ), NULL, this );
+	btnUcitajSifratAES->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::UcitajSifratAES ), NULL, this );
+	btnSnimiPorukuAES->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::SnimiPorukuAES ), NULL, this );
+	btnSnimiSifratAES->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::SnimiSifratAES ), NULL, this );
 	btnKriptirajPorukuAES->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::KriptirajPorukuAES ), NULL, this );
 	btnGenerirajRSAKljuc->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::GenerirajRSA ), NULL, this );
 	btnSnimiRSAKljuc->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( GUIFrame::snimiRSAKljuceve ), NULL, this );

@@ -2,27 +2,12 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="Interfaces.h" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="ProjektFrame.cpp" open="1" top="1" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="611" topLine="13" />
+			<Cursor1 position="10515" topLine="270" />
 		</Cursor>
 	</File>
-	<File name="GUIFrame.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="6466" topLine="118" />
-		</Cursor>
-	</File>
-	<File name="ProjektApp.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2138" topLine="27" />
-		</Cursor>
-	</File>
-	<File name="GUIFrame.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1612" topLine="30" />
-		</Cursor>
-	</File>
-	<File name="GlavniStroj.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="GlavniStroj.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="13363" topLine="333" />
 		</Cursor>
@@ -32,19 +17,34 @@
 			<Cursor1 position="1071" topLine="6" />
 		</Cursor>
 	</File>
-	<File name="ProjektFrame.cpp" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="Interfaces.h" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="14010" topLine="359" />
+			<Cursor1 position="611" topLine="26" />
+		</Cursor>
+	</File>
+	<File name="GUIFrame.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="6466" topLine="118" />
 		</Cursor>
 	</File>
 	<File name="ProjektApp.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4461" topLine="117" />
+			<Cursor1 position="3354" topLine="97" />
+		</Cursor>
+	</File>
+	<File name="ProjektApp.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1934" topLine="18" />
 		</Cursor>
 	</File>
 	<File name="ProjektFrame.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2115" topLine="15" />
+			<Cursor1 position="1222" topLine="15" />
+		</Cursor>
+	</File>
+	<File name="GUIFrame.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3423" topLine="75" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

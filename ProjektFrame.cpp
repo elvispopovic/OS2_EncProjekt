@@ -144,6 +144,7 @@ void ProjektFrame::UcitajPorukuAES( wxCommandEvent& event )
     porukaSadrzajAES.clear();
     std::ifstream citanje_datoteke( openFileDialog.GetPath().ToAscii(), std::ios::binary );
     porukaSadrzajAES.assign((std::istreambuf_iterator<char>(citanje_datoteke)), (std::istreambuf_iterator<char>()));
+    citanje_datoteke.close();
     porukaPotpisivanje.clear();
     porukaPotpisivanje.insert(porukaPotpisivanje.end(),porukaSadrzajAES.begin(),porukaSadrzajAES.end());
 
@@ -166,7 +167,71 @@ void ProjektFrame::UcitajPorukuAES( wxCommandEvent& event )
     aplikacija->KreirajSazetakAES(porukaSadrzajAES);
 
     btnKriptirajPorukuAES->Enable();
+    btnSnimiPorukuAES->Enable();
     btnKriptirajPorukuAES->SetLabel(wxT("Enkriptiraj"));
+}
+void ProjektFrame::SnimiPorukuAES( wxCommandEvent& event )
+{
+    wxFileDialog saveFileDialog(this, wxT("Snimi poruku"), "", "",
+                       wxT("sve datoteke (*.*)|*.*"), wxFD_SAVE);
+    wxFileName imeDatoteke(wxStandardPaths::Get().GetExecutablePath());
+    saveFileDialog.SetDirectory(imeDatoteke.GetPath());
+    if (saveFileDialog.ShowModal() == wxID_CANCEL)
+        return;
+    std::ofstream snimanje_u_datoteku( saveFileDialog.GetPath().ToAscii(), std::ios::binary );
+    std::copy(porukaSadrzajAES.begin(), porukaSadrzajAES.end(), std::ostreambuf_iterator<char>(snimanje_u_datoteku));
+	snimanje_u_datoteku.close();
+}
+
+void ProjektFrame::SnimiSifratAES( wxCommandEvent& event )
+{
+    wxFileDialog saveFileDialog(this, wxT("Snimi šifrat"), "", "",
+                       wxT("datoteke šifrata (*.dat)|*.dat"), wxFD_SAVE);
+    wxFileName imeDatoteke(wxStandardPaths::Get().GetExecutablePath());
+    saveFileDialog.SetDirectory(imeDatoteke.GetPath());
+    /* otvaranje dijaloga */
+    if (saveFileDialog.ShowModal() == wxID_CANCEL)
+        return;
+    std::ofstream snimanje_u_datoteku( saveFileDialog.GetPath().ToAscii(), std::ios::binary );
+    //snimanje_u_datoteku.write(reinterpret_cast<char *>(&porukaSadrzajAES[0]), porukaSadrzajAES.size());
+    std::copy(porukaSadrzajAES.begin(), porukaSadrzajAES.end(), std::ostreambuf_iterator<char>(snimanje_u_datoteku));
+	snimanje_u_datoteku.close();
+}
+void ProjektFrame::UcitajSifratAES( wxCommandEvent& event )
+{
+    wchar_t ispis[3];
+    wxString upis;
+    int brojac;
+    wxFileDialog openFileDialog(this, wxT("Učitaj enkriptiranu datoteku"), "", "",
+                       "sve datoteke (*.dat)|*.dat", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+    wxFileName imeDatoteke(wxStandardPaths::Get().GetExecutablePath());
+    openFileDialog.SetDirectory(imeDatoteke.GetPath());
+    if (openFileDialog.ShowModal() == wxID_CANCEL)
+        return;
+    std::ifstream citanje_datoteke( openFileDialog.GetPath().ToAscii(), std::ios::binary );
+    porukaSadrzajAES.assign((std::istreambuf_iterator<char>(citanje_datoteke)), (std::istreambuf_iterator<char>()));
+    citanje_datoteke.close();
+    porukaPotpisivanje.clear();
+    aplikacija->UpisiMedjuspremnikPorukeRSA(porukaSadrzajAES);
+    std::vector<unsigned char>::iterator it;
+    for(brojac = 0, it = porukaSadrzajAES.begin(); it!=porukaSadrzajAES.end(); ++it, ++brojac)
+        if(brojac++<1024)
+            upis.append(wxString::Format("%02X ",(int)(*it)));
+        else
+        {
+            upis.append(wxString("..."));
+            break;
+        }
+    upis.append(wxString::Format(L"\n"));
+    txtAESPoruka->Clear();
+    txtAESPoruka->AppendText(upis);
+    txtAESPorukaPotpis->Clear();
+
+    okvirPorukeAES->GetStaticBox()->SetLabel(L"Poruka - učitan šifrat");
+    btnKriptirajPorukuAES->Enable();
+    btnKriptirajPorukuAES->SetLabel(wxT("Dekriptiraj"));
+    btnSnimiPorukuAES->Disable();
+    btnSnimiSifratAES->Enable();
 
 }
 
@@ -200,6 +265,7 @@ void ProjektFrame::UcitajPorukuRSA( wxCommandEvent& event )
 
     btnKriptirajPorukuRSA->Enable();
     btnKriptirajPorukuRSA->SetLabel(wxT("Enkriptiraj"));
+    btnSnimiSifratAES->Disable();
 }
 
 void ProjektFrame::KriptirajPorukuAES( wxCommandEvent& event )
@@ -211,13 +277,21 @@ void ProjektFrame::KriptirajPorukuAES( wxCommandEvent& event )
                 return;
             aplikacija->DohvatiMedjuspremnikPorukeAES(porukaSadrzajAES);
             btnKriptirajPorukuAES->SetLabel(wxT("Dekriptiraj"));
+             btnSnimiSifratAES->Enable();
+             btnSnimiPorukuAES->Disable();
         }
         else
         {
             if(!aplikacija->DekriptirajPorukuAES(porukaSadrzajAES))
+            {
+                wxMessageBox(wxT("Šifrat nije moguće dekriptirati.\nMogući razlog je pogrešni ključ ili sam šifrat."),wxT("Pogreška - dekripcija"));
                 return;
+            }
+
             aplikacija->DohvatiMedjuspremnikPorukeAES(porukaSadrzajAES);
             btnKriptirajPorukuAES->SetLabel(wxT("Enkriptiraj"));
+            btnSnimiSifratAES->Disable();
+            btnSnimiPorukuAES->Enable();
         }
 }
 void ProjektFrame::KriptirajPorukuRSA( wxCommandEvent& event )

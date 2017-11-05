@@ -106,6 +106,11 @@ void ProjektApp::DohvatiMedjuspremnikPorukeRSA(std::vector<unsigned char>& poruk
 {
     poruka=medjuspremnikPorukeRSA;
 }
+void ProjektApp::UpisiMedjuspremnikPorukeRSA(const std::vector<unsigned char>& poruka)
+{
+    medjuspremnikPorukeRSA=poruka;
+}
+
 
 void ProjektApp::KreirajSazetakAES(const std::vector<unsigned char>& poruka)
 {

@@ -49,6 +49,7 @@ class GUIFrame : public wxFrame
 		wxMenuBar* mbar;
 		wxMenu* fileMenu;
 		wxMenu* m_menu3;
+		wxMenu* m_menu1;
 		wxMenu* helpMenu;
 		wxStatusBar* statusBar;
 		wxAuiNotebook* biljeznica;
@@ -62,6 +63,9 @@ class GUIFrame : public wxFrame
 		wxStaticBoxSizer* okvirPorukeAES;
 		wxTextCtrl* txtAESPoruka;
 		wxButton* btnUcitajPorukuAES;
+		wxButton* btnUcitajSifratAES;
+		wxButton* btnSnimiPorukuAES;
+		wxButton* btnSnimiSifratAES;
 		wxButton* btnKriptirajPorukuAES;
 		wxTextCtrl* tbSazetakAES;
 		wxScrolledWindow* m_scrolledWindow2;
@@ -91,12 +95,15 @@ class GUIFrame : public wxFrame
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnQuit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UcitajPoruku( wxCommandEvent& event ) { event.Skip(); }
+		virtual void UcitajSifratAES( wxCommandEvent& event ) { event.Skip(); }
 		virtual void AESDijalog( wxCommandEvent& event ) { event.Skip(); }
 		virtual void GenerirajRSA( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ) { event.Skip(); }
 		virtual void snimiAESKljuc( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ucitajAESKljuc( wxCommandEvent& event ) { event.Skip(); }
 		virtual void UcitajPorukuAES( wxCommandEvent& event ) { event.Skip(); }
+		virtual void SnimiPorukuAES( wxCommandEvent& event ) { event.Skip(); }
+		virtual void SnimiSifratAES( wxCommandEvent& event ) { event.Skip(); }
 		virtual void KriptirajPorukuAES( wxCommandEvent& event ) { event.Skip(); }
 		virtual void snimiRSAKljuceve( wxCommandEvent& event ) { event.Skip(); }
 		virtual void ucitajRSAKljuceve( wxCommandEvent& event ) { event.Skip(); }

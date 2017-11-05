@@ -31,6 +31,10 @@ class ProjektFrame : public GUIFrame
         virtual void snimiAESKljuc( wxCommandEvent& event );
         virtual void ucitajAESKljuc( wxCommandEvent& event );
         virtual void UcitajPorukuAES( wxCommandEvent& event );
+        virtual void SnimiPorukuAES( wxCommandEvent& event );
+        virtual void SnimiSifratAES( wxCommandEvent& event );
+        virtual void UcitajSifratAES( wxCommandEvent& event );
+
         virtual void UcitajPorukuRSA( wxCommandEvent& event );
         virtual void UcitajPoruku( wxCommandEvent& event );
         virtual void KriptirajPorukuAES( wxCommandEvent& event );
@@ -40,6 +44,7 @@ class ProjektFrame : public GUIFrame
         virtual void ucitajRSAKljuceve( wxCommandEvent& event );
         virtual void PotpisiPoruku( wxCommandEvent& event );
         virtual void Verificiraj( wxCommandEvent& event );
+
 
         virtual void OnQuit(wxCommandEvent& event);
         virtual void OnAbout(wxCommandEvent& event);
