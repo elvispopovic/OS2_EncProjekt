@@ -47,6 +47,7 @@ class ProjektFrame : public GUIFrame
         virtual void ucitajRSAKljuceve( wxCommandEvent& event );
         virtual void PotpisiPoruku( wxCommandEvent& event );
         virtual void Verificiraj( wxCommandEvent& event );
+        virtual void SnimiPotpis( wxCommandEvent& event );
 
 
         virtual void OnQuit(wxCommandEvent& event);

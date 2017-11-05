@@ -96,7 +96,10 @@ bool ProjektApp::VerificirajPoruku(const std::vector<unsigned char>& poruka, std
 {
     return glavniStroj->VerificirajPoruku(poruka, potpis);
 }
-
+void ProjektApp::SnimiPotpis(const std::string& nazivDatoteke, const std::vector<unsigned char>& potpis)
+{
+    glavniStroj->SnimiPotpis(nazivDatoteke, potpis);
+}
 
 void ProjektApp::DohvatiMedjuspremnikPorukeAES(std::vector<unsigned char>& poruka)
 {

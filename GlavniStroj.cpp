@@ -348,6 +348,19 @@ bool GlavniStroj::VerificirajPoruku(const vector<unsigned char>& poruka, const v
     return rezultat;
 }
 
+void GlavniStroj::SnimiPotpis(const std::string& nazivDatoteke, const vector<unsigned char>& potpis)
+{
+    ByteQueue red;
+    string potpisHex;
+    if(potpis.size()==0)
+        return;
+    FileSink potpisDatSink(nazivDatoteke.c_str());
+    HexEncoder he(new StringSink(potpisHex));
+    he.Put(potpis.data(),potpis.size()); //dodaje se aes ključ
+    red.Put(reinterpret_cast<const byte*>(potpisHex.data()),potpisHex.size()); //sve ide u red
+    red.CopyTo(potpisDatSink); //prosljedjuje se upravljaču datoteke na snimanje
+}
+
 string GlavniStroj::IspisiBinarnePodatke(byte *podaci, int velicina)
 {
     string upis;

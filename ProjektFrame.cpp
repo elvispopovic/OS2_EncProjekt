@@ -170,6 +170,8 @@ void ProjektFrame::UcitajPorukuAES( wxCommandEvent& event )
 
     btnKriptirajPorukuAES->Enable();
     btnSnimiPorukuAES->Enable();
+    btnSnimiSifratAES->Disable();
+    btnPotpisi->Enable();
     btnKriptirajPorukuAES->SetLabel(wxT("Enkriptiraj"));
 }
 void ProjektFrame::SnimiPorukuAES( wxCommandEvent& event )
@@ -460,12 +462,35 @@ void ProjektFrame::PotpisiPoruku( wxCommandEvent& event )
 {
     if(!(porukaPotpisivanje.empty())&&(aplikacija!=nullptr))
         if(!(aplikacija->PotpisiPoruku(porukaPotpisivanje, potpis)))
+        {
             wxMessageBox(wxT("Nije generiran par ključeva.\nPoruka se ne može potpisati. Kreirajte ključeve u odjeljku asimetrične kriptografije."),"Upozorenje!");
+            btnSnimiPotpis->Disable();
+            btnVerificiraj->Disable();
+        }
+        else
+        {
+            btnSnimiPotpis->Enable();
+            btnVerificiraj->Enable();
+        }
+
 }
 void ProjektFrame::Verificiraj( wxCommandEvent& event )
 {
     if(!(porukaPotpisivanje.empty())&&(aplikacija!=nullptr))
         aplikacija->VerificirajPoruku(porukaPotpisivanje, potpis);
+}
+
+void ProjektFrame::SnimiPotpis( wxCommandEvent& event )
+{
+    std::string nazivDatoteke;
+    wxFileDialog saveFileDialog(this, wxT("Snimi potpis"), "", "",
+                       wxT("digitalni potpisi (*.sig)|*.sig"), wxFD_SAVE);
+    wxFileName imeDatoteke(wxStandardPaths::Get().GetExecutablePath());
+    saveFileDialog.SetDirectory(imeDatoteke.GetPath());
+    if (saveFileDialog.ShowModal() == wxID_CANCEL)
+        return;
+    nazivDatoteke.assign(saveFileDialog.GetPath().ToAscii());
+    aplikacija->SnimiPotpis(nazivDatoteke,potpis);
 }
 
 void ProjektFrame::OsvjeziPodatke(wxCommandEvent &event)

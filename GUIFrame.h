@@ -89,9 +89,13 @@ class GUIFrame : public wxFrame
 		wxButton* btnKriptirajPorukuRSA;
 		wxTextCtrl* tbSazetakRSA;
 		wxScrolledWindow* m_scrolledWindow3;
+		wxButton* btnUcitajPorukuPotpis;
 		wxTextCtrl* txtAESPorukaPotpis;
 		wxButton* btnPotpisi;
 		wxButton* btnVerificiraj;
+		wxStaticLine* m_staticline6;
+		wxButton* btnSnimiPotpis;
+		wxButton* btnUcitajPotpis;
 		wxTextCtrl* txtAESPorukaPotpis1;
 		wxStaticText* lblVerificirano;
 		
@@ -118,6 +122,8 @@ class GUIFrame : public wxFrame
 		virtual void KriptirajPorukuRSA( wxCommandEvent& event ) { event.Skip(); }
 		virtual void PotpisiPoruku( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Verificiraj( wxCommandEvent& event ) { event.Skip(); }
+		virtual void SnimiPotpis( wxCommandEvent& event ) { event.Skip(); }
+		virtual void UcitajPotpis( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:

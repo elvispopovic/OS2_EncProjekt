@@ -21,6 +21,7 @@ class GlavniStroj : public wxFrame
         virtual void KreirajSazetakRSA(const std::vector<unsigned char>& poruka);
         virtual bool PotpisiPoruku(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& potpis);
         virtual bool VerificirajPoruku(const std::vector<unsigned char>& poruka, const std::vector<unsigned char>& potpis);
+        virtual void SnimiPotpis(const std::string& nazivDatoteke, const std::vector<unsigned char>& potpis);
         virtual bool EnkriptirajPorukuAES(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& enkriptirano);
         virtual bool DekriptirajPorukuAES(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& dekriptirano);
         virtual bool EnkriptirajPorukuRSA(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& enkriptirano);
