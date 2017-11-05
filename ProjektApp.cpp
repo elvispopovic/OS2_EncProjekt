@@ -100,6 +100,10 @@ void ProjektApp::SnimiPotpis(const std::string& nazivDatoteke, const std::vector
 {
     glavniStroj->SnimiPotpis(nazivDatoteke, potpis);
 }
+bool ProjektApp::UcitajPotpis(const std::string& nazivDatoteke, std::vector<unsigned char>& potpis)
+{
+    return glavniStroj->UcitajPotpis(nazivDatoteke, potpis);
+}
 
 void ProjektApp::DohvatiMedjuspremnikPorukeAES(std::vector<unsigned char>& poruka)
 {

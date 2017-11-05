@@ -477,7 +477,10 @@ void ProjektFrame::PotpisiPoruku( wxCommandEvent& event )
 void ProjektFrame::Verificiraj( wxCommandEvent& event )
 {
     if(!(porukaPotpisivanje.empty())&&(aplikacija!=nullptr))
-        aplikacija->VerificirajPoruku(porukaPotpisivanje, potpis);
+        if(!(aplikacija->VerificirajPoruku(porukaPotpisivanje, potpis)))
+        {
+            wxMessageBox(wxT("Nije moguće provjeriti digitalni potpis.\nMogući razlog: nema para RSA ključeva."),"Upozorenje!");
+        }
 }
 
 void ProjektFrame::SnimiPotpis( wxCommandEvent& event )
@@ -491,6 +494,29 @@ void ProjektFrame::SnimiPotpis( wxCommandEvent& event )
         return;
     nazivDatoteke.assign(saveFileDialog.GetPath().ToAscii());
     aplikacija->SnimiPotpis(nazivDatoteke,potpis);
+}
+void ProjektFrame::UcitajPotpis( wxCommandEvent& event )
+{
+    std::string nazivDatoteke;
+    int brojac;
+    wxFileDialog openFileDialog(this, wxT("Učitaj digitalni potpis"), "", "",
+                       "digitalni potpis (*.sig)|*.sig", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+    wxFileName imeDatoteke(wxStandardPaths::Get().GetExecutablePath());
+    openFileDialog.SetDirectory(imeDatoteke.GetPath());
+    if (openFileDialog.ShowModal() == wxID_CANCEL)
+        return;
+    nazivDatoteke.assign(openFileDialog.GetPath().ToAscii());
+    if(!(aplikacija->UcitajPotpis(nazivDatoteke,potpis)))
+    {
+        wxMessageBox(wxT("Nije moguće učitati digitalni potpis."),"Upozorenje!");
+        btnSnimiPotpis->Disable();
+        btnVerificiraj->Disable();
+    }
+    else
+    {
+        btnSnimiPotpis->Enable();
+        btnVerificiraj->Enable();
+    }
 }
 
 void ProjektFrame::OsvjeziPodatke(wxCommandEvent &event)

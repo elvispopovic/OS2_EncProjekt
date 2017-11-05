@@ -35,7 +35,7 @@ class ProjektApp : public wxApp, IProjektApp
         virtual bool PotpisiPoruku(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& potpis);
         virtual bool VerificirajPoruku(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& potpis);
         virtual void SnimiPotpis(const std::string& nazivDatoteke, const std::vector<unsigned char>& potpis);
-
+        virtual bool UcitajPotpis(const std::string& nazivDatoteke, std::vector<unsigned char>& potpis);
         virtual void UpisiMedjuspremnikPorukeAES(const std::vector<unsigned char>& poruka);
         virtual void DohvatiMedjuspremnikPorukeAES(std::vector<unsigned char>& poruka);
         virtual void UpisiMedjuspremnikPorukeRSA(const std::vector<unsigned char>& poruka);

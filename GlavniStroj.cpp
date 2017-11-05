@@ -338,13 +338,20 @@ bool GlavniStroj::VerificirajPoruku(const vector<unsigned char>& poruka, const v
     RSASS<PSSR, SHA256>::Verifier verifikacija(javniKljuc);
     bool rezultat = false;
 
-    rezultat=verifikacija.VerifyMessage(poruka.data(),poruka.size(), potpis.data(), potpis.size());
-    switch(rezultat)
+    try
     {
-        case true: upis.verificirano=1; break;
-        case false: upis.verificirano=-1; break;
+        rezultat=verifikacija.VerifyMessage(poruka.data(),poruka.size(), potpis.data(), potpis.size());
+        switch(rezultat)
+        {
+            case true: upis.verificirano=1; break;
+            case false: upis.verificirano=-1; break;
+        }
+        projektApp->UpisiPoruku(upis);
     }
-    projektApp->UpisiPoruku(upis);
+    catch(...)
+    {
+        return false;
+    }
     return rezultat;
 }
 
@@ -359,6 +366,26 @@ void GlavniStroj::SnimiPotpis(const std::string& nazivDatoteke, const vector<uns
     he.Put(potpis.data(),potpis.size()); //dodaje se aes ključ
     red.Put(reinterpret_cast<const byte*>(potpisHex.data()),potpisHex.size()); //sve ide u red
     red.CopyTo(potpisDatSink); //prosljedjuje se upravljaču datoteke na snimanje
+}
+
+bool GlavniStroj::UcitajPotpis(const std::string& nazivDatoteke, vector<unsigned char>& potpis)
+{
+    PorukaPodaci upis;
+    try
+    {
+        potpis.resize(1024);
+        ArraySink asPotpis(potpis.data(),1024);
+        FileSource fsPotpis(nazivDatoteke.c_str(), false, new HexDecoder(new Redirector(asPotpis)));
+        fsPotpis.PumpAll();
+        potpis.resize(asPotpis.TotalPutLength());
+    }
+    catch( ... )
+    {
+        return false;
+    }
+    ArraySource(potpis.data(), potpis.size(), true, new HexEncoder(new StringSink(upis.potpisAES),true,2," "));
+    projektApp->UpisiPoruku(upis);
+    return true;
 }
 
 string GlavniStroj::IspisiBinarnePodatke(byte *podaci, int velicina)

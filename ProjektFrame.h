@@ -48,6 +48,7 @@ class ProjektFrame : public GUIFrame
         virtual void PotpisiPoruku( wxCommandEvent& event );
         virtual void Verificiraj( wxCommandEvent& event );
         virtual void SnimiPotpis( wxCommandEvent& event );
+        virtual void UcitajPotpis( wxCommandEvent& event );
 
 
         virtual void OnQuit(wxCommandEvent& event);
