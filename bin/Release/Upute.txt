@@ -1,0 +1,32 @@
+Aplikacija je izvedena u jeziku C++ (MinGW TDM GCC 64 compiler) uz wxWidgets GUI biblioteku te Crypto++ biblioteku za kriptiranje.
+Da bi aplikacija radila, potrebne su dll datoteke (za grafiku).
+
+Aplikacija je intuitivna, i podijeljena je na tri dijela:
+-simetrično kriptiranje, uz upotrebu AES simetričnog kriptosustava
+-asimetrično kriptiranje, uz upotrebu RSA kriptosustava
+-digitalno potpisivanje i provjera potpisa
+
+Aplikacija može generirati simetrični ključ, spremiti ga u datoteku te učitati. 
+Budući da koristi interne međuspremnike, ključ nije potrebno spremiti da bi se moglo dalje raditi. 
+Isto vrijedi i za asimetrični par ključeva.
+Pomoću asimetričnog kriptosustava moguće je kriptirati kraće datoteke.
+Svaku datoteku moguće je digitalno potpisati. Potpis se može spremiti, te naknadno učitati i provjeriti uz učitanu datoteku.
+
+Datoteke koje se mogu učitati mogu biti binarne, a takve se spremaju i u kriptiranom obliku.
+Ključevi se spremaju u heksadecimalnom obliku u tekstualne datoteke prema uputama za projekt.
+Uz ovo, asimetrični par ključeva dodatno se sprema i u DER formatu (binarno).
+
+Aplikacija ima i pregledno raspoređene gumbe, kao i padajuće menije.
+Za neke osnovne operacije, poput učitavanja i spremanja poruka, postoje i prečaci (shortcuts).
+
+Ekstenzije:
+ključevi u DER obliku: key
+ključevi u tekstualnom (hex) obliku: txt
+simetrično kriptirana datoteka: aes
+asimetrično kriptirana datoteka: rsa
+digitalni potpis: sig
+
+Poruke, kao i potpisi učitavaju se i snimaju preko standardnih dijaloga.
+Priložene su testne datoteke, testni ključevi i testni potpis za veću poruku.
+
+

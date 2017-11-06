@@ -96,9 +96,15 @@ void ProjektFrame::snimiAESKljuc( wxCommandEvent& event )
 }
 void ProjektFrame::ucitajAESKljuc( wxCommandEvent& event )
 {
-    aplikacija->UcitajAESKljuc();
-    if(biljeznica->GetSelection()!=0)
-        biljeznica->SetSelection(0);
+    if(!(aplikacija->UcitajAESKljuc()))
+    {
+        wxMessageBox(wxT("Ne postoji zapis tajnog ključa."),"Upozorenje!", MB_ICONEXCLAMATION);
+    }
+    else
+    {
+        if(biljeznica->GetSelection()!=0)
+            biljeznica->SetSelection(0);
+    }
 }
 
 void ProjektFrame::UcitajPoruku( wxCommandEvent& event )
@@ -476,11 +482,15 @@ void ProjektFrame::PotpisiPoruku( wxCommandEvent& event )
 }
 void ProjektFrame::Verificiraj( wxCommandEvent& event )
 {
-    if(!(porukaPotpisivanje.empty())&&(aplikacija!=nullptr))
-        if(!(aplikacija->VerificirajPoruku(porukaPotpisivanje, potpis)))
-        {
-            wxMessageBox(wxT("Nije moguće provjeriti digitalni potpis.\nMogući razlog: nema para RSA ključeva."),"Upozorenje!");
-        }
+    if(porukaPotpisivanje.empty()||aplikacija==nullptr)
+    {
+        wxMessageBox(wxT("Nije moguće provjeriti digitalni potpis. Nema poruke."),"Upozorenje!");
+        return;
+    }
+    if(!(aplikacija->VerificirajPoruku(porukaPotpisivanje, potpis)))
+    {
+        wxMessageBox(wxT("Nije moguće provjeriti digitalni potpis.\nMogući razlog: nema para RSA ključeva."),"Upozorenje!");
+    }
 }
 
 void ProjektFrame::SnimiPotpis( wxCommandEvent& event )

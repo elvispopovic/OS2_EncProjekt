@@ -83,7 +83,6 @@ bool GlavniStroj::UcitajAESKljuc(const std::string tajniDatoteka)
     {
         return false;
     }
-
     ZahtijevajAzuriranjeGrafickihPodataka();
     return true;
 }
@@ -288,6 +287,7 @@ bool GlavniStroj::EnkriptirajPorukuRSA(const std::vector<unsigned char>& poruka,
     projektApp->UpisiPoruku(upis);
     return true;
 }
+
 bool GlavniStroj::DekriptirajPorukuRSA(const std::vector<unsigned char>& poruka, std::vector<unsigned char>& dekriptirano)
 {
     PorukaPodaci upis;
@@ -305,6 +305,7 @@ bool GlavniStroj::DekriptirajPorukuRSA(const std::vector<unsigned char>& poruka,
     projektApp->UpisiPoruku(upis);
     return true;
 }
+
 
 bool GlavniStroj::PotpisiPoruku(const vector<unsigned char>& poruka, vector<unsigned char>& potpis)
 {
@@ -347,6 +348,7 @@ bool GlavniStroj::VerificirajPoruku(const vector<unsigned char>& poruka, const v
             case false: upis.verificirano=-1; break;
         }
         projektApp->UpisiPoruku(upis);
+        rezultat=true;
     }
     catch(...)
     {

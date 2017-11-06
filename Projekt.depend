@@ -3475,7 +3475,7 @@
 	<iomanip>
 	"ProjektFrame.h"
 
-1509921560 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\glavnistroj.cpp
+1509966140 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\glavnistroj.cpp
 	"GlavniStroj.h"
 
 1509920839 d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\glavnistroj.h
@@ -3825,7 +3825,7 @@
 	"ProjektApp.h"
 	"GUIFrame.h"
 
-1509921904 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\projektframe.cpp
+1509965973 source:d:\foi\operacijski sustavi\projekt\os2_projekt\os2_projekt\projektframe.cpp
 	"wx_pch.h"
 	<wx/wfstream.h>
 	<wx/txtstrm.h>

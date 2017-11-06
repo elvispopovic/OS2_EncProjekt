@@ -1,1 +1,0 @@
-Kratki tekst za testiranje RSA algoritma kriptiranja. 
